@@ -11,7 +11,6 @@ namespace Gamejum
     class Map
     {
         MapChip mapChip = new MapChip();
-        Block block = new Block();
         private int[,] map;
 
         private Vector2 position;
@@ -36,7 +35,6 @@ namespace Gamejum
                     if (map[x, y] == 1)
                     {
                         position = new Vector2(x * whith, y * hight);
-                        block.SetPosition(position);
                     }
                 }
             }
