@@ -41,9 +41,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Map.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="MapChip.cs" />
+    <Compile Include="MapChip1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

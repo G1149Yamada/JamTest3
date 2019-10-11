@@ -11,6 +11,7 @@ namespace Gamejum
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        MapChip1 MapChip = new MapChip1();
 
         public Game1()
         {
@@ -39,6 +40,7 @@ namespace Gamejum
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            MapChip.texture = Content.Load<Texture2D>("block");
 
             // TODO: use this.Content to load your game content here
         }
@@ -76,6 +78,10 @@ namespace Gamejum
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            MapChip.Draw(spriteBatch);
+            spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
