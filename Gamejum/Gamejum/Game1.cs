@@ -12,11 +12,16 @@ namespace Gamejum
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         MapChip1 MapChip = new MapChip1();
+        Player player = new Player();
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            graphics.IsFullScreen=true;//フルスクリーン描画
+            graphics.PreferredBackBufferWidth = Screen.Width;
+            graphics.PreferredBackBufferHeight = Screen.Height;
         }
 
         /// <summary>
@@ -41,6 +46,7 @@ namespace Gamejum
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             MapChip.texture = Content.Load<Texture2D>("block");
+            player.name = Content.Load<Texture2D>("BotRigth");
 
             // TODO: use this.Content to load your game content here
         }
@@ -64,6 +70,7 @@ namespace Gamejum
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            player.Update(gameTime);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -80,6 +87,7 @@ namespace Gamejum
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             MapChip.Draw(spriteBatch);
+            player.Draw(spriteBatch);
             spriteBatch.End();
 
 
