@@ -198,7 +198,7 @@ namespace Gamejum
             //そこの場所にとどまる
             if (worldPosition.Y >= searchY)
             {
-                worldPosition.Y = worldPosition.Y;
+                
 
             }
 
