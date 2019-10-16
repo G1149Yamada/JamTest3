@@ -110,14 +110,14 @@ namespace Gamejum
 
                     if (Math.Abs(V.X) < Math.Abs(V.Y))
                     {
-                        if (V.Y < 0)
+                        if (V.Y < 0)//top
                         {
                             worldPosition.Y = SY - 128;
                         }
                         else if (V.Y > 0)
                         {
                             worldPosition.Y = SY + 128;
-                            
+
                         }
                     }
                     else if (Math.Abs(V.X) > Math.Abs(V.Y))
@@ -137,17 +137,15 @@ namespace Gamejum
 
                     }
                     break;
-
-
             }
 
         }
 
         public void Update(GameTime gameTime)
         {
-            velocity = new Vector2(5,5);
-            worldPosition.X = worldPosition.X + (velocity.X * Z);
-            worldPosition.Y ++;
+            velocity = new Vector2(5, 5);
+            worldPosition.X += (velocity.X * Z);
+            worldPosition.Y++;
 
             if (previousKey.IsKeyDown(Keys.Space))
             {
@@ -192,7 +190,16 @@ namespace Gamejum
                     vect = worldPosition - b;
 
                     Hit(searchX, searchY, vect);
+
                 }
+            }
+
+            //もしプレイヤーの縦位置よりもブロックのほうが低い場合は
+            //そこの場所にとどまる
+            if (worldPosition.Y >= searchY)
+            {
+                worldPosition.Y = worldPosition.Y;
+
             }
 
             cameraPosition = worldPosition;
