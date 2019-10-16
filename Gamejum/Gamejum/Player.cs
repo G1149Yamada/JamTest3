@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Gamejum
@@ -31,12 +32,13 @@ namespace Gamejum
         private int searchY;
         private int searchListNumber;
 
+        private int W;//Y軸の計算を受け取る場所
         private int Z;
 
         private int rightWall;
         private int bottomWall;
 
-
+        private KeyboardState previousKey;//キーボード
 
         MapChip1 mapChip1;
 
@@ -59,7 +61,7 @@ namespace Gamejum
             blockPosition = new Vector2();
             vect = new Vector2();
 
-
+            previousKey = Keyboard.GetState();//キーボード
 
             for (Y = 0; Y < mapData.GetLength(0); Y++)
             {
@@ -91,7 +93,13 @@ namespace Gamejum
         {
         }
 
-        public void Hit(int SX,int SY,Vector2 V)
+        /// <summary>
+        /// 当たり判定
+        /// </summary>
+        /// <param name="SX">ブロックのPosition.X</param>
+        /// <param name="SY">ブロックのposiiton.Y</param>
+        /// <param name="V">二点間の距離(ベクトル)</param>
+        public void Hit(int SX, int SY, Vector2 V)
         {
 
             searchListNumber = mapData[SY % height, SX % width];
@@ -105,12 +113,11 @@ namespace Gamejum
                         if (V.Y < 0)
                         {
                             worldPosition.Y = SY - 128;
-
                         }
                         else if (V.Y > 0)
                         {
-
                             worldPosition.Y = SY + 128;
+                            
                         }
                     }
                     else if (Math.Abs(V.X) > Math.Abs(V.Y))
@@ -133,14 +140,21 @@ namespace Gamejum
 
 
             }
-            
+
         }
 
         public void Update(GameTime gameTime)
         {
-            worldPosition.X = worldPosition.X +(5 * Z);
-            worldPosition.Y += 5;
+            velocity = new Vector2(5,5);
+            worldPosition.X = worldPosition.X + (velocity.X * Z);
+            worldPosition.Y ++;
 
+            if (previousKey.IsKeyDown(Keys.Space))
+            {
+
+            }
+
+            //アニメーションカウント
             count++;
             if (count > 4)
             {
@@ -159,6 +173,7 @@ namespace Gamejum
                (int)worldPosition.Y,
                128, 128);
 
+            //ブロックの処理
             foreach (var b in blockList)
             {
                 Rectangle blockRect = new Rectangle(
@@ -173,22 +188,16 @@ namespace Gamejum
                     searchY = (int)b.Y;
 
                     //searchListNumber = mapData[searchY, searchX];
-                    
+
                     vect = worldPosition - b;
 
-
-
                     Hit(searchX, searchY, vect);
-
-
-
-
-
                 }
             }
 
             cameraPosition = worldPosition;
 
+            //スクロール横
             if (worldPosition.X <= Screen.Width / 2 - width / 2)
             {
 
@@ -202,7 +211,7 @@ namespace Gamejum
                 cameraPosition.X = worldPosition.X - (rightWall - Screen.Width) + width / 2;
             }
 
-
+            //スクロール縦
             if (worldPosition.Y <= Screen.Height / 2 - height / 2)
             {
 
@@ -218,12 +227,12 @@ namespace Gamejum
 
 
             Console.WriteLine(worldPosition);
-            
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(name,cameraPosition,new Rectangle(64*DrawCount,0,64,64), Color.White);
+            spriteBatch.Draw(name, cameraPosition, new Rectangle(64 * DrawCount, 0, 64, 64), Color.White);
         }
 
         public Vector2 GetPosition()
