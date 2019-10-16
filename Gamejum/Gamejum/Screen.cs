@@ -8,7 +8,7 @@ namespace Gamejum
 {
     class Screen
     {
-        public static readonly int Width = 1500;
-        public static readonly int Height = 1500;
+        public static readonly int Width = 1920;
+        public static readonly int Height = 1080;
     }
 }

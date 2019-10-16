@@ -13,6 +13,7 @@ namespace Gamejum
         SpriteBatch spriteBatch;
         MapChip1 MapChip = new MapChip1();
         Player player = new Player();
+        MapDraw mapDraw = new MapDraw();
 
         public Game1()
         {
@@ -35,6 +36,8 @@ namespace Gamejum
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            mapDraw.Initialize();
         }
 
         /// <summary>
@@ -45,7 +48,7 @@ namespace Gamejum
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            MapChip.texture = Content.Load<Texture2D>("block");
+            mapDraw.texture = Content.Load<Texture2D>("block");
             player.name = Content.Load<Texture2D>("BotRigth");
 
             // TODO: use this.Content to load your game content here
@@ -71,6 +74,7 @@ namespace Gamejum
                 Exit();
 
             player.Update(gameTime);
+            mapDraw.Updata(gameTime);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -86,7 +90,7 @@ namespace Gamejum
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            MapChip.Draw(spriteBatch);
+            mapDraw.Draw(spriteBatch);
             player.Draw(spriteBatch);
             spriteBatch.End();
 
