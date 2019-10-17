@@ -19,6 +19,7 @@ namespace Gamejum
         private Vector2 cameraPosition;
 
         private int[,] mapData;
+        private int[,] mapnum;
 
         private int x;
         private int y;
@@ -30,6 +31,7 @@ namespace Gamejum
 
         private int rightWall;
         private int bottomWall;
+        private int num;
 
         public void Initialize()
         {
@@ -82,6 +84,10 @@ namespace Gamejum
 
                     worldPosition = new Vector2(x * width, y * height);
                     cameraPosition = worldPosition;
+                    if (mapData[y, x] == 0)
+                    {
+
+                    }
 
                     if (mapData[y, x] == 1)
                     {
@@ -117,11 +123,25 @@ namespace Gamejum
                             cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
                         }
 
-                        spriteBatch.Draw(texture, cameraPosition, Color.White);
+                        if (mapnum[y, x] != 1)
+                        {
+                            num = 1;
+                        }
+                        else if (mapnum[y, x] == 1)
+                        {
+                            num = 2;
+                        }
+                        else
+                        {
+                            num = 3;
+                        }
+
+                        spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White);
                         //Console.WriteLine(cameraPosition);
                     }
+                    mapnum = mapData;
                 }
-                
+
             }
 
         }

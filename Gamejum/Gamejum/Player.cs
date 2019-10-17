@@ -11,6 +11,7 @@ namespace Gamejum
 {
     class Player
     {
+        private Vector2 position;
         private Vector2 worldPosition;
         private Vector2 cameraPosition;
         private Vector2 velocity;
@@ -45,6 +46,7 @@ namespace Gamejum
         public Player()
         {
             worldPosition = new Vector2(1800, 128);
+            position = worldPosition;
             cameraPosition = worldPosition;
             velocity = Vector2.Zero;
             DrawCount = 1;
@@ -113,11 +115,12 @@ namespace Gamejum
                         if (V.Y < 0)//top
                         {
                             worldPosition.Y = SY - 128;
+                            Console.WriteLine("あああああ");
                         }
                         else if (V.Y > 0)
                         {
                             worldPosition.Y = SY + 128;
-
+                            Console.WriteLine("うばーーー");
                         }
                     }
                     else if (Math.Abs(V.X) > Math.Abs(V.Y))
@@ -152,17 +155,17 @@ namespace Gamejum
 
             }
 
-            //アニメーションカウント
-            count++;
-            if (count > 4)
-            {
-                DrawCount++;
-                count = 0;
-                if (DrawCount <= 4)
-                {
-                    DrawCount %= 4;
-                }
-            }
+            ////アニメーションカウント
+            //count++;
+            //if (count > 4)
+            //{
+            //    DrawCount++;
+            //    count = 0;
+            //    if (DrawCount <= 4)
+            //    {
+            //        DrawCount %= 4;
+            //    }
+            //}
 
 
 
@@ -191,6 +194,11 @@ namespace Gamejum
 
                     Hit(searchX, searchY, vect);
 
+                    position=worldPosition;
+                    if (worldPosition.Y > 128 || worldPosition.Y < 0)
+                    {
+                        worldPosition.Y = position.Y;
+                    }
                 }
             }
 
@@ -198,8 +206,8 @@ namespace Gamejum
             //そこの場所にとどまる
             if (worldPosition.Y >= searchY)
             {
-                
-
+                worldPosition.Y += 5;
+                //Console.WriteLine("a");
             }
 
             cameraPosition = worldPosition;
@@ -239,7 +247,7 @@ namespace Gamejum
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(name, cameraPosition, new Rectangle(64 * DrawCount, 0, 64, 64), Color.White);
+            spriteBatch.Draw(name, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
         }
 
         public Vector2 GetPosition()
