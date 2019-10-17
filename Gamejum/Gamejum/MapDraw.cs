@@ -51,7 +51,7 @@ namespace Gamejum
             {
                 for (x = 0; x < mapData.GetLength(1); x++)
                 {
-                    if (mapData[y, x] == 1)
+                    if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3)
                     {
                         worldPosition = new Vector2(x * width, y * height);
 
@@ -80,13 +80,11 @@ namespace Gamejum
             {
                 for (int x = 0; x < mapData.GetLength(1); x++)
                 {
+                    
 
                     worldPosition = new Vector2(x * width, y * height);
                     cameraPosition = worldPosition;
-                    if (mapData[y, x] == 0)
-                    {
-
-                    }
+                    
 
                     if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3)
                     {
