@@ -47,7 +47,6 @@ namespace Gamejum
         {
 
             worldPosition = new Vector2(1408, 0);
-
             position = worldPosition;
             cameraPosition = worldPosition;
             velocity = Vector2.Zero;
@@ -71,6 +70,7 @@ namespace Gamejum
             {
                 for (X = 0; X < mapData.GetLength(1); X++)
                 {
+
 
                     if (mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5)
 
@@ -108,6 +108,7 @@ namespace Gamejum
         {
             searchListNumber = mapData[SY / height, SX / width];
 
+
             switch (searchListNumber)
             {
                 case 1:
@@ -117,6 +118,7 @@ namespace Gamejum
                         if (V.Y < 0)//top
                         {
                             worldPosition.Y = SY - 128;
+
                             velocity.Y = 0;
                         }
                         else if (V.Y > 0)
@@ -138,16 +140,6 @@ namespace Gamejum
                             Z = 1;
                         }
 
-                    }
-                    break;
-                case 2:
-                    if (Math.Abs(V.X) < Math.Abs(V.Y))
-                    {
-                        if (V.Y < 0)//top
-                        {
-                            worldPosition.Y = SY - 128;
-                            velocity.Y = 0;
-                        }
                         else if (V.Y > 0)
                         {
                             worldPosition.Y = SY + 128;
@@ -159,6 +151,7 @@ namespace Gamejum
                         {
 
                             worldPosition.X = SX + 128;
+
                             
                         }
                         else if (V.X < 0)
@@ -189,6 +182,7 @@ namespace Gamejum
 
                             worldPosition.X = SX + 128;
                             Z = -1;
+
                         }
                         else if (V.X < 0)
                         {
@@ -205,8 +199,8 @@ namespace Gamejum
         public void Update(GameTime gameTime)
         {
             velocity = new Vector2(5, 5);
-            worldPosition.X -=velocity.X * Z;
-            worldPosition.Y +=velocity.Y;
+            //worldPosition.X -=velocity.X * Z;
+            worldPosition.Y -=velocity.Y*Z;
 
             if (previousKey.IsKeyDown(Keys.Space))
             {
@@ -252,19 +246,23 @@ namespace Gamejum
 
                     Hit(searchX, searchY, vect);
 
-                    //position = worldPosition;
-                    //if (worldPosition.Y < 128 || worldPosition.Y > 0)
-                    //{
-                    //    velocity.Y=0;
-                    //    count++;
-                    //    Console.WriteLine(velocity.Y);
-                    //    Console.WriteLine("aaaa"+count);
-                    //}
+                    position = worldPosition;
+                    if (worldPosition.Y < 128 || worldPosition.Y > 0)
+                    {
+                        velocity.Y=0;
+                        count++;
+                        Console.WriteLine(velocity.Y);
+                        Console.WriteLine("aaaa"+count);
+                    }
                 }
             }
 
             ////もしプレイヤーの縦位置よりもブロックのほうが低い場合は
             ////そこの場所にとどまる
+            if (worldPosition.Y >= searchY)
+            {
+                velocity.Y += 5;
+            }
 
 
             cameraPosition = worldPosition;
@@ -296,8 +294,6 @@ namespace Gamejum
             {
                 cameraPosition.Y = worldPosition.Y - (bottomWall - Screen.Height) + height / 2;
             }
-
-            Console.WriteLine(position);
 
         }
 
