@@ -83,10 +83,7 @@ namespace Gamejum
 
                     worldPosition = new Vector2(x * width, y * height);
                     cameraPosition = worldPosition;
-                    if (mapData[y, x] == 0)
-                    {
-
-                    }
+                    
 
                     if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3)
                     {
