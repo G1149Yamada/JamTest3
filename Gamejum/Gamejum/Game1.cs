@@ -20,7 +20,7 @@ namespace Gamejum
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.IsFullScreen=true;//フルスクリーン描画
+            //graphics.IsFullScreen=true;//フルスクリーン描画
             graphics.PreferredBackBufferWidth = Screen.Width;
             graphics.PreferredBackBufferHeight = Screen.Height;
         }

@@ -115,12 +115,11 @@ namespace Gamejum
                         if (V.Y < 0)//top
                         {
                             worldPosition.Y = SY - 128;
-                            Console.WriteLine("あああああ");
+
                         }
                         else if (V.Y > 0)
                         {
                             worldPosition.Y = SY + 128;
-                            Console.WriteLine("うばーーー");
                         }
                     }
                     else if (Math.Abs(V.X) > Math.Abs(V.Y))
@@ -133,7 +132,6 @@ namespace Gamejum
                         }
                         else if (V.X < 0)
                         {
-
                             worldPosition.X = SX - 128;
                             Z = -1;
                         }
@@ -147,8 +145,8 @@ namespace Gamejum
         public void Update(GameTime gameTime)
         {
             velocity = new Vector2(5, 5);
-            worldPosition.X += (velocity.X * Z);
-            worldPosition.Y++;
+            //worldPosition.X -=velocity.X * Z;
+            worldPosition.Y -=velocity.Y*Z;
 
             if (previousKey.IsKeyDown(Keys.Space))
             {
@@ -194,21 +192,24 @@ namespace Gamejum
 
                     Hit(searchX, searchY, vect);
 
-                    position=worldPosition;
-                    if (worldPosition.Y > 128 || worldPosition.Y < 0)
+                    position = worldPosition;
+                    if (worldPosition.Y < 128 || worldPosition.Y > 0)
                     {
-                        worldPosition.Y = position.Y;
+                        velocity.Y=0;
+                        count++;
+                        Console.WriteLine(velocity.Y);
+                        Console.WriteLine("aaaa"+count);
                     }
                 }
             }
 
-            //もしプレイヤーの縦位置よりもブロックのほうが低い場合は
-            //そこの場所にとどまる
+            ////もしプレイヤーの縦位置よりもブロックのほうが低い場合は
+            ////そこの場所にとどまる
             if (worldPosition.Y >= searchY)
             {
-                worldPosition.Y += 5;
-                //Console.WriteLine("a");
+                velocity.Y += 5;
             }
+
 
             cameraPosition = worldPosition;
 
@@ -239,9 +240,6 @@ namespace Gamejum
             {
                 cameraPosition.Y = worldPosition.Y - (bottomWall - Screen.Height) + height / 2;
             }
-
-
-            Console.WriteLine(worldPosition);
 
         }
 

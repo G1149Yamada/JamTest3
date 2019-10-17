@@ -19,7 +19,6 @@ namespace Gamejum
         private Vector2 cameraPosition;
 
         private int[,] mapData;
-        private int[,] mapnum;
 
         private int x;
         private int y;
@@ -89,10 +88,11 @@ namespace Gamejum
 
                     }
 
-                    if (mapData[y, x] == 1)
+                    if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3)
                     {
+                        num = 0;
 
-                        //spriteBatch.Draw(texture, cameraPosition, new Rectangle(0, 0, 64, 64), Color.White);
+                        ////spriteBatch.Draw(texture, cameraPosition, new Rectangle(0, 0, 64, 64), Color.White);
                         if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
                         {
 
@@ -109,7 +109,7 @@ namespace Gamejum
                             cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
                         }
 
-
+                        //もし高さがスクリーンの真ん中により上に行くとき
                         if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
                         {
 
@@ -123,23 +123,22 @@ namespace Gamejum
                             cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
                         }
 
-                        if (mapnum[y, x] != 1)
+                        if (mapData[y, x] == 1)
+                        {
+                            num = 0;
+                        }
+                        if (mapData[y, x] == 2)
                         {
                             num = 1;
                         }
-                        else if (mapnum[y, x] == 1)
-                        {
-                            num = 2;
-                        }
-                        else
+                        if (mapData[y, x] == 3)
                         {
                             num = 3;
                         }
 
                         spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White);
-                        //Console.WriteLine(cameraPosition);
                     }
-                    mapnum = mapData;
+                    
                 }
 
             }
