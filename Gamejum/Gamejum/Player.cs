@@ -145,6 +145,21 @@ namespace Gamejum
                             worldPosition.Y = SY + 128;
                         }
                     }
+                    break;
+                case 2:
+                    if (Math.Abs(V.X) < Math.Abs(V.Y))
+                    {
+                        if (V.Y < 0)//top
+                        {
+                            worldPosition.Y = SY - 128;
+
+                            velocity.Y = 0;
+                        }
+                        else if (V.Y > 0)
+                        {
+                            worldPosition.Y = SY + 128;
+                        }
+                    }
                     else if (Math.Abs(V.X) > Math.Abs(V.Y))
                     {
                         if (V.X >= 0)
@@ -199,8 +214,8 @@ namespace Gamejum
         public void Update(GameTime gameTime)
         {
             velocity = new Vector2(5, 5);
-            //worldPosition.X -=velocity.X * Z;
-            worldPosition.Y -=velocity.Y*Z;
+            worldPosition.X -=velocity.X * Z;
+            worldPosition.Y +=velocity.Y;
 
             if (previousKey.IsKeyDown(Keys.Space))
             {
@@ -246,22 +261,7 @@ namespace Gamejum
 
                     Hit(searchX, searchY, vect);
 
-                    position = worldPosition;
-                    if (worldPosition.Y < 128 || worldPosition.Y > 0)
-                    {
-                        velocity.Y=0;
-                        count++;
-                        Console.WriteLine(velocity.Y);
-                        Console.WriteLine("aaaa"+count);
-                    }
                 }
-            }
-
-            ////もしプレイヤーの縦位置よりもブロックのほうが低い場合は
-            ////そこの場所にとどまる
-            if (worldPosition.Y >= searchY)
-            {
-                velocity.Y += 5;
             }
 
 
