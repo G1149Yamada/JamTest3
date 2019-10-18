@@ -25,6 +25,7 @@ namespace Gamejum
 
         private int width;
         private int height;
+        private int Height;
 
         private Vector2 playerWorldPosition;
 

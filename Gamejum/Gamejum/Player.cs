@@ -11,6 +11,9 @@ namespace Gamejum
 {
     class Player
     {
+        private Vector2 icePosition;
+        private bool Appearance;
+
         private Vector2 position;
         private Vector2 worldPosition;
         private Vector2 cameraPosition;
@@ -19,6 +22,8 @@ namespace Gamejum
         public int count;
         public int DrawCount;
         public int[,] mapData;
+
+        private bool isHit;
 
         private int X;
         private int Y;
@@ -55,6 +60,7 @@ namespace Gamejum
             Y = 0;
             width = 128;
             height = 128;
+            Appearance = false;
 
             mapChip1 = new MapChip1();
             mapChip1.Ini();
@@ -70,13 +76,10 @@ namespace Gamejum
             {
                 for (X = 0; X < mapData.GetLength(1); X++)
                 {
-
-
                     if (mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5)
 
                         blockPosition = new Vector2(X * width, Y * height);
                     blockList.Add(blockPosition);
-
                 }
 
             }
@@ -90,13 +93,15 @@ namespace Gamejum
             bottomWall = mapData.GetLength(0) * height;
         }
 
-    
+
 
 
 
         public void Initialize()
         {
         }
+
+
 
         /// <summary>
         /// 当たり判定
@@ -108,118 +113,41 @@ namespace Gamejum
         {
             searchListNumber = mapData[SY / height, SX / width];
 
-
+            Console.WriteLine(searchListNumber);
             switch (searchListNumber)
             {
                 case 1:
-
-                    if (Math.Abs(V.X) < Math.Abs(V.Y))
-                    {
-                        if (V.Y < 0)//top
-                        {
-                            worldPosition.Y = SY - 128;
-
-                            velocity.Y = 0;
-                        }
-                        else if (V.Y > 0)
-                        {
-                            worldPosition.Y = SY + 128;
-                        }
-                    }
-                    else if (Math.Abs(V.X) > Math.Abs(V.Y))
-                    {
-                        if (V.X >= 0)
-                        {
-
-                            worldPosition.X = SX + 128;
-                            Z = -1;
-                        }
-                        else if (V.X < 0)
-                        {
-                            worldPosition.X = SX - 128;
-                            Z = 1;
-                        }
-
-                        else if (V.Y > 0)
-                        {
-                            worldPosition.Y = SY + 128;
-                        }
-                    }
+                    HIT(SX, SY, V);
                     break;
+
                 case 2:
-                    if (Math.Abs(V.X) < Math.Abs(V.Y))
-                    {
-                        if (V.Y < 0)//top
-                        {
-                            worldPosition.Y = SY - 128;
-
-                            velocity.Y = 0;
-                        }
-                        else if (V.Y > 0)
-                        {
-                            worldPosition.Y = SY + 128;
-                        }
-                    }
-                    else if (Math.Abs(V.X) > Math.Abs(V.Y))
-                    {
-                        if (V.X >= 0)
-                        {
-
-                            worldPosition.X = SX + 128;
-
-                            
-                        }
-                        else if (V.X < 0)
-                        {
-                            worldPosition.X = SX - 128;
-                            
-                        }
-
-                    }
+                    HIT(SX, SY, V);
                     break;
+
                 case 3:
-                    if (Math.Abs(V.X) < Math.Abs(V.Y))
-                    {
-                        if (V.Y < 0)//top
-                        {
-                            worldPosition.Y = SY - 128;
-                            velocity.Y = 0;
-                        }
-                        else if (V.Y > 0)
-                        {
-                            worldPosition.Y = SY + 128;
-                        }
-                    }
-                    else if (Math.Abs(V.X) > Math.Abs(V.Y))
-                    {
-                        if (V.X >= 0)
-                        {
-
-                            worldPosition.X = SX + 128;
-                            Z = -1;
-
-                        }
-                        else if (V.X < 0)
-                        {
-                            worldPosition.X = SX - 128;
-                            Z = 1;
-                        }
-
-                    }
+                    HIT(SX, SY, V);
                     break;
-           }
+            }
+        }
+
+        public void IceMecer()
+        {
 
         }
 
         public void Update(GameTime gameTime)
         {
             velocity = new Vector2(5, 5);
-            worldPosition.X -=velocity.X * Z;
-            worldPosition.Y +=velocity.Y;
+            worldPosition.X -= velocity.X * Z;
+            worldPosition.Y += velocity.Y;
 
             if (previousKey.IsKeyDown(Keys.Space))
             {
+                //if(previousKey.IsKeyDown((KeyState.Down)))
+                //else
+                //{
 
+                //}
             }
 
             ////アニメーションカウント
@@ -233,8 +161,6 @@ namespace Gamejum
             //        DrawCount %= 4;
             //    }
             //}
-
-
 
             Rectangle playerRect = new Rectangle(
                (int)worldPosition.X,
@@ -260,7 +186,6 @@ namespace Gamejum
                     vect = worldPosition - b;
 
                     Hit(searchX, searchY, vect);
-
                 }
             }
 
@@ -305,6 +230,59 @@ namespace Gamejum
         public Vector2 GetPosition()
         {
             return worldPosition;
+        }
+
+
+        private void HIT(int SX, int SY, Vector2 V)
+        {
+            
+            if (Math.Abs(V.X) < Math.Abs(V.Y))
+            {
+                if (V.Y < 0)//top
+                {
+                    worldPosition.Y = SY - 128;
+                    isHit = true;
+                    velocity.Y = 0;
+                }
+                else if (V.Y > 0)
+                {
+                    worldPosition.Y = SY + 128;
+                }
+            }
+            else if (Math.Abs(V.X) > Math.Abs(V.Y))
+            {
+                if (V.X >= 0)
+                {
+                    worldPosition.X = SX + 128;
+                }
+                else if (V.X < 0)
+                {
+                    worldPosition.X = SX - 128;
+                }
+            }
+
+            if (isHit == true)
+            {
+                if (V.X >= 0 && searchListNumber == 3)
+                {
+                    Z = -1;
+                }
+                else if (V.X < 0 && searchListNumber == 1)
+                {
+                    Z = 1;
+                }
+            }
+            if (isHit == false)
+            {
+                if (searchListNumber == 3 && V.X >= 0 && V.Y < 0)
+                {
+                    Z = 0;
+                }
+                if (searchListNumber == 1 && V.X <= 0 && V.Y < 0)
+                {
+                    Z = 0;
+                }
+            }
         }
     }
 }
