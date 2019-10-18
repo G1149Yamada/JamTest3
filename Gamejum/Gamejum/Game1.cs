@@ -50,6 +50,7 @@ namespace Gamejum //コミットとプッシュのテスト
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mapDraw.texture = Content.Load<Texture2D>("block");
             player.name = Content.Load<Texture2D>("BotRigth");
+            player.secoundname = Content.Load<Texture2D>("仮立ち絵２");
 
             // TODO: use this.Content to load your game content here
         }

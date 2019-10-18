@@ -11,20 +11,20 @@ namespace Gamejum
 {
     class Player
     {
-        private Vector2 icePosition;
-        private bool Appearance;
-
         private Vector2 position;
         private Vector2 worldPosition;
         private float getPosition;
         private Vector2 cameraPosition;
         private Vector2 velocity;
         public Texture2D name;
-        public int count;
+        public Texture2D secoundname;
+        public float count; //押す間隔
         public int DrawCount;
         public int[,] mapData;
 
-        private bool isHit;
+        private bool isHit;//壁掴みようの判定
+        public bool D4C;//平衡世界
+        public int D4Ccount;
 
         private int X;
         private int Y;
@@ -39,7 +39,6 @@ namespace Gamejum
         private int searchY;
         private int searchListNumber;
 
-        private int W;//Y軸の計算を受け取る場所
         private int Z;
 
         private int rightWall;
@@ -61,7 +60,6 @@ namespace Gamejum
             Y = 0;
             width = 128;
             height = 128;
-            Appearance = false;
 
             mapChip1 = new MapChip1();
             mapChip1.Ini();
@@ -70,6 +68,7 @@ namespace Gamejum
             blockList = new List<Vector2>();
             blockPosition = new Vector2();
             vect = new Vector2();
+            D4C = false;
 
             previousKey = Keyboard.GetState();//キーボード
 
@@ -113,16 +112,8 @@ namespace Gamejum
         public void Hit(int SX, int SY, Vector2 V)
         {
             searchListNumber = mapData[SY / height, SX / width];
-
-            Console.WriteLine(searchListNumber);
             switch (searchListNumber)
             {
-                //case 0:
-                //    if (V.Y > 0)
-                //    {
-                //        isHit = false;
-                //    }
-                   // break;
                 case 1:
                     HIT(SX, SY, V);
                     break;
@@ -143,9 +134,26 @@ namespace Gamejum
             }
         }
 
+        /// <summary>
+        /// 切り替え
+        /// </summary>
+        /// <param name="Counter">0 or 1を返すだけ</param>
+        public void D4CCounter(int Counter)
+        {
+            switch (Counter)
+            {
+                case 1:
+                    D4C = true;
+                    break;
+                case 2:
+                    D4C = false;
+                    break;
+            }
+
+        }
+
         public void IceMecer()
         {
-
         }
 
         public void Update(GameTime gameTime)
@@ -154,20 +162,27 @@ namespace Gamejum
             worldPosition.X -= velocity.X * Z;
             worldPosition.Y += velocity.Y;
 
-            //if (worldPosition.Y < getPosition)
-            //{
-            //    isHit = false;
-            //}
             getPosition = worldPosition.Y;
 
-            if (previousKey.IsKeyDown(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                //if(previousKey.IsKeyDown((KeyState.Down)))
-                //else
-                //{
-
-                //}
+                count ++;
+                if (count == 1)
+                {
+                    D4Ccount ++;
+                    D4CCounter(D4Ccount);
+                    if (D4Ccount == 2)
+                    {
+                        D4Ccount = 0;
+                    }
+                }
+                Console.WriteLine(D4Ccount);
             }
+            else
+            {
+                count = 0.0f;
+            }
+                Console.WriteLine(D4C+"世界");
 
             ////アニメーションカウント
             //count++;
@@ -207,7 +222,6 @@ namespace Gamejum
                     Hit(searchX, searchY, vect);
                 }
             }
-            Console.WriteLine(isHit);
 
 
             cameraPosition = worldPosition;
@@ -239,11 +253,6 @@ namespace Gamejum
                 cameraPosition.Y = worldPosition.Y - (bottomWall - Screen.Height) + height / 2;
             }
 
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(name, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
         }
 
         public Vector2 GetPosition()
@@ -303,5 +312,18 @@ namespace Gamejum
                 }
             }
         }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            if (D4C == false)
+            {
+                spriteBatch.Draw(name, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
+            }
+        }
+
     }
 }
