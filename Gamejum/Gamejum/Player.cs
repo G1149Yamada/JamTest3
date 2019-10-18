@@ -16,6 +16,7 @@ namespace Gamejum
 
         private Vector2 position;
         private Vector2 worldPosition;
+        private float getPosition;
         private Vector2 cameraPosition;
         private Vector2 velocity;
         public Texture2D name;
@@ -76,7 +77,7 @@ namespace Gamejum
             {
                 for (X = 0; X < mapData.GetLength(1); X++)
                 {
-                    if (mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5)
+                    if (mapData[Y,X]==0||mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5)
 
                         blockPosition = new Vector2(X * width, Y * height);
                     blockList.Add(blockPosition);
@@ -116,6 +117,12 @@ namespace Gamejum
             Console.WriteLine(searchListNumber);
             switch (searchListNumber)
             {
+                //case 0:
+                //    if (V.Y > 0)
+                //    {
+                //        isHit = false;
+                //    }
+                   // break;
                 case 1:
                     HIT(SX, SY, V);
                     break;
@@ -125,6 +132,12 @@ namespace Gamejum
                     break;
 
                 case 3:
+                    HIT(SX, SY, V);
+                    break;
+                case 4:
+                    HIT(SX, SY, V);
+                    break;
+                case 5:
                     HIT(SX, SY, V);
                     break;
             }
@@ -140,6 +153,12 @@ namespace Gamejum
             velocity = new Vector2(5, 5);
             worldPosition.X -= velocity.X * Z;
             worldPosition.Y += velocity.Y;
+
+            //if (worldPosition.Y < getPosition)
+            //{
+            //    isHit = false;
+            //}
+            getPosition = worldPosition.Y;
 
             if (previousKey.IsKeyDown(Keys.Space))
             {
@@ -188,6 +207,7 @@ namespace Gamejum
                     Hit(searchX, searchY, vect);
                 }
             }
+            Console.WriteLine(isHit);
 
 
             cameraPosition = worldPosition;
@@ -209,7 +229,6 @@ namespace Gamejum
             //スクロール縦
             if (worldPosition.Y <= Screen.Height / 2 - height / 2)
             {
-
             }
             else if (worldPosition.Y >= Screen.Height / 2 - height / 2 && worldPosition.Y < bottomWall - Screen.Height / 2 - height)
             {
@@ -235,20 +254,20 @@ namespace Gamejum
 
         private void HIT(int SX, int SY, Vector2 V)
         {
-            
             if (Math.Abs(V.X) < Math.Abs(V.Y))
             {
                 if (V.Y < 0)//top
                 {
                     worldPosition.Y = SY - 128;
-                    isHit = true;
                     velocity.Y = 0;
+                    isHit = true;
                 }
                 else if (V.Y > 0)
                 {
                     worldPosition.Y = SY + 128;
                 }
             }
+
             else if (Math.Abs(V.X) > Math.Abs(V.Y))
             {
                 if (V.X >= 0)
@@ -260,9 +279,9 @@ namespace Gamejum
                     worldPosition.X = SX - 128;
                 }
             }
-
             if (isHit == true)
             {
+
                 if (V.X >= 0 && searchListNumber == 3)
                 {
                     Z = -1;
@@ -274,11 +293,11 @@ namespace Gamejum
             }
             if (isHit == false)
             {
-                if (searchListNumber == 3 && V.X >= 0 && V.Y < 0)
+                if (searchListNumber == 4 && V.X >= 0 && V.Y < 0)
                 {
                     Z = 0;
                 }
-                if (searchListNumber == 1 && V.X <= 0 && V.Y < 0)
+                if (searchListNumber == 5 && V.X <= 0 && V.Y < 0)
                 {
                     Z = 0;
                 }

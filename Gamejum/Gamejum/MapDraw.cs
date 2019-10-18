@@ -55,8 +55,6 @@ namespace Gamejum
                     if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3)
                     {
                         worldPosition = new Vector2(x * width, y * height);
-
-
                     }
                 }
             }
@@ -90,7 +88,7 @@ namespace Gamejum
 
                     }
 
-                    if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3)
+                    if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3||mapData[y,x]==4 || mapData[y, x] == 5)
                     {
                         num = 0;
 
@@ -125,7 +123,7 @@ namespace Gamejum
                             cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
                         }
 
-                        if (mapData[y, x] == 1)
+                        if (mapData[y, x] == 1 || mapData[y, x] == 5)
                         {
                             num = 0;
                         }
@@ -133,7 +131,7 @@ namespace Gamejum
                         {
                             num = 1;
                         }
-                        if (mapData[y, x] == 3)
+                        if (mapData[y, x] == 3 || mapData[y, x] == 4)
                         {
                             num = 3;
                         }
