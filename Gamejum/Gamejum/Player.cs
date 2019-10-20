@@ -12,17 +12,17 @@ namespace Gamejum
     class Player
     {
         private Vector2 position;
-        private Vector2 worldPosition;
-        private float getPosition;
         private Vector2 cameraPosition;
         private Vector2 velocity;
         public Texture2D name;
         public Texture2D secoundname;
-        public float count; //押す間隔
         public int DrawCount;
         public int[,] mapData;
 
         private bool isHit;//壁掴みようの判定
+        private bool isJump;
+
+        public float count; //押す間隔
         public bool D4C;//平衡世界
         public int D4Ccount;
 
@@ -39,6 +39,8 @@ namespace Gamejum
         private int searchY;
         private int searchListNumber;
 
+        private float W;//Y軸に使う
+        private int jumpTop;
         private int Z;
 
         private int rightWall;
@@ -51,9 +53,8 @@ namespace Gamejum
         public Player()
         {
 
-            worldPosition = new Vector2(1408, 0);
-            position = worldPosition;
-            cameraPosition = worldPosition;
+            position = new Vector2(200, 2150);
+            cameraPosition = position;
             velocity = Vector2.Zero;
             DrawCount = 1;
             X = 0;
@@ -64,11 +65,12 @@ namespace Gamejum
             mapChip1 = new MapChip1();
             mapChip1.Ini();
 
+            isJump = false;
+
             mapData = mapChip1.GetMapData();
             blockList = new List<Vector2>();
             blockPosition = new Vector2();
             vect = new Vector2();
-            D4C = false;
 
             previousKey = Keyboard.GetState();//キーボード
 
@@ -76,7 +78,7 @@ namespace Gamejum
             {
                 for (X = 0; X < mapData.GetLength(1); X++)
                 {
-                    if (mapData[Y,X]==0||mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5)
+                    if (mapData[Y, X] == 0 || mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5 || mapData[Y, X] == 6)
 
                         blockPosition = new Vector2(X * width, Y * height);
                     blockList.Add(blockPosition);
@@ -88,20 +90,15 @@ namespace Gamejum
             searchListNumber = new int();
 
             Z = -1;
+            W = 1;
 
             rightWall = mapData.GetLength(1) * width;
             bottomWall = mapData.GetLength(0) * height;
         }
 
-
-
-
-
         public void Initialize()
         {
         }
-
-
 
         /// <summary>
         /// 当たり判定
@@ -131,6 +128,9 @@ namespace Gamejum
                 case 5:
                     HIT(SX, SY, V);
                     break;
+                case 6:
+                    HIT(SX, SY, V);
+                    break;
             }
         }
 
@@ -149,7 +149,6 @@ namespace Gamejum
                     D4C = false;
                     break;
             }
-
         }
 
         public void IceMecer()
@@ -159,30 +158,28 @@ namespace Gamejum
         public void Update(GameTime gameTime)
         {
             velocity = new Vector2(5, 5);
-            worldPosition.X -= velocity.X * Z;
-            worldPosition.Y += velocity.Y;
+            position.X -= velocity.X * Z;
+            position.Y += velocity.Y * W;
 
-            getPosition = worldPosition.Y;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                count ++;
+                count++;
                 if (count == 1)
                 {
-                    D4Ccount ++;
+                    D4Ccount++;
                     D4CCounter(D4Ccount);
                     if (D4Ccount == 2)
                     {
                         D4Ccount = 0;
                     }
                 }
-                Console.WriteLine(D4Ccount);
             }
             else
             {
                 count = 0.0f;
             }
-                Console.WriteLine(D4C+"世界");
+
 
             ////アニメーションカウント
             //count++;
@@ -197,8 +194,8 @@ namespace Gamejum
             //}
 
             Rectangle playerRect = new Rectangle(
-               (int)worldPosition.X,
-               (int)worldPosition.Y,
+               (int)position.X,
+               (int)position.Y,
                128, 128);
 
             //ブロックの処理
@@ -211,55 +208,48 @@ namespace Gamejum
 
                 if (playerRect.Intersects(blockRect))//playerとブロックの当たり判定
                 {
-
                     searchX = (int)b.X;
                     searchY = (int)b.Y;
 
-                    //searchListNumber = mapData[searchY, searchX];
-
-                    vect = worldPosition - b;
-
+                    vect = position - b;
                     Hit(searchX, searchY, vect);
                 }
             }
 
-
-            cameraPosition = worldPosition;
+            cameraPosition = position;
 
             //スクロール横
-            if (worldPosition.X <= Screen.Width / 2 - width / 2)
+            if (position.X <= Screen.Width / 2 - width / 2)
             {
 
             }
-            else if (worldPosition.X >= Screen.Width / 2 - width / 2 && worldPosition.X < rightWall - Screen.Width / 2 - width)
+            else if (position.X >= Screen.Width / 2 - width / 2 && position.X < rightWall - Screen.Width / 2 - width)
             {
                 cameraPosition.X = Screen.Width / 2 - width / 2;
             }
-            else if (worldPosition.X >= rightWall - Screen.Width / 2 - width && worldPosition.X <= rightWall)
+            else if (position.X >= rightWall - Screen.Width / 2 - width && position.X <= rightWall)
             {
-                cameraPosition.X = worldPosition.X - (rightWall - Screen.Width) + width / 2;
+                cameraPosition.X = position.X - (rightWall - Screen.Width) + width / 2;
             }
 
             //スクロール縦
-            if (worldPosition.Y <= Screen.Height / 2 - height / 2)
+            if (position.Y <= Screen.Height / 2 - height / 2)
             {
             }
-            else if (worldPosition.Y >= Screen.Height / 2 - height / 2 && worldPosition.Y < bottomWall - Screen.Height / 2 - height)
+            else if (position.Y >= Screen.Height / 2 - height / 2 && position.Y < bottomWall - Screen.Height / 2 - height)
             {
                 cameraPosition.Y = Screen.Height / 2 - height / 2;
             }
-            else if (worldPosition.Y >= bottomWall - Screen.Height / 2 - height && worldPosition.Y <= bottomWall)
+            else if (position.Y >= bottomWall - Screen.Height / 2 - height && position.Y <= bottomWall)
             {
-                cameraPosition.Y = worldPosition.Y - (bottomWall - Screen.Height) + height / 2;
+                cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2;
             }
-
         }
 
         public Vector2 GetPosition()
         {
-            return worldPosition;
+            return position;
         }
-
 
         private void HIT(int SX, int SY, Vector2 V)
         {
@@ -267,13 +257,13 @@ namespace Gamejum
             {
                 if (V.Y < 0)//top
                 {
-                    worldPosition.Y = SY - 128;
+                    position.Y = SY - 128;
                     velocity.Y = 0;
                     isHit = true;
                 }
                 else if (V.Y > 0)
                 {
-                    worldPosition.Y = SY + 128;
+                    position.Y = SY + 128;
                 }
             }
 
@@ -281,16 +271,15 @@ namespace Gamejum
             {
                 if (V.X >= 0)
                 {
-                    worldPosition.X = SX + 128;
+                    position.X = SX + 128;
                 }
                 else if (V.X < 0)
                 {
-                    worldPosition.X = SX - 128;
+                    position.X = SX - 128;
                 }
             }
-            if (isHit == true)
+            if (isHit == true&&isJump==false)
             {
-
                 if (V.X >= 0 && searchListNumber == 3)
                 {
                     Z = -1;
@@ -300,17 +289,34 @@ namespace Gamejum
                     Z = 1;
                 }
             }
-            if (isHit == false)
+            else
             {
-                if (searchListNumber == 4 && V.X >= 0 && V.Y < 0)
-                {
-                    Z = 0;
-                }
-                if (searchListNumber == 5 && V.X <= 0 && V.Y < 0)
+                if ((searchListNumber == 4 && V.X >= 0 && V.Y < 0)|| (searchListNumber == 5 && V.X <= 0 && V.Y < 0))
                 {
                     Z = 0;
                 }
             }
+
+            if (D4C == true)
+            {
+                if ((V.Y < 0 && searchListNumber == 6) || isJump == true)
+                {
+                    W = -5;
+                    jumpTop -= (int)W;
+                    isJump = true;
+                }
+                if ((jumpTop == 15 || V.Y > 0))
+                {
+                    W = 2.0f;
+                    jumpTop = 0;
+                    isJump = false;
+                    if (V.Y > 0)
+                    {
+                        W = 1;
+                    }
+                }
+            }
+            Console.WriteLine(isJump);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -324,6 +330,5 @@ namespace Gamejum
                 spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
             }
         }
-
     }
 }

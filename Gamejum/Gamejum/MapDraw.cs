@@ -15,6 +15,8 @@ namespace Gamejum
         Player player;
 
         public Texture2D texture;
+        public Texture2D secoundTex;
+        private Texture2D AllTexture;
         private Vector2 worldPosition;
         private Vector2 cameraPosition;
 
@@ -25,7 +27,6 @@ namespace Gamejum
 
         private int width;
         private int height;
-        private int Height;
 
         private Vector2 playerWorldPosition;
 
@@ -52,7 +53,7 @@ namespace Gamejum
             {
                 for (x = 0; x < mapData.GetLength(1); x++)
                 {
-                    if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3)
+                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3)
                     {
                         worldPosition = new Vector2(x * width, y * height);
                     }
@@ -79,8 +80,6 @@ namespace Gamejum
             {
                 for (int x = 0; x < mapData.GetLength(1); x++)
                 {
-                    
-
                     worldPosition = new Vector2(x * width, y * height);
                     cameraPosition = worldPosition;
                     if (mapData[y, x] == 0)
@@ -88,14 +87,13 @@ namespace Gamejum
 
                     }
 
-                    if (mapData[y, x] == 1||mapData[y,x]==2||mapData[y,x]==3||mapData[y,x]==4 || mapData[y, x] == 5)
+                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3 || mapData[y, x] == 4 || mapData[y, x] == 5)
                     {
                         num = 0;
 
                         ////spriteBatch.Draw(texture, cameraPosition, new Rectangle(0, 0, 64, 64), Color.White);
                         if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
                         {
-
 
                         }
                         else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
@@ -127,22 +125,62 @@ namespace Gamejum
                         {
                             num = 0;
                         }
-                        if (mapData[y, x] == 2)
+                        else if (mapData[y, x] == 2)
                         {
                             num = 1;
                         }
-                        if (mapData[y, x] == 3 || mapData[y, x] == 4)
+                        else if (mapData[y, x] == 3 || mapData[y, x] == 4)
                         {
                             num = 3;
                         }
 
                         spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White);
                     }
-                    
+                    else if (mapData[y, x] == 6)
+                    {
+                        num = 0;
+
+                        if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
+                        {
+
+                        }
+                        else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
+                        {
+                            cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
+                        }
+                        else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
+                        {
+                            cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
+                        }
+
+                        //もし高さがスクリーンの真ん中により上に行くとき
+                        if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
+                        {
+
+                        }
+                        else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
+                        {
+                            cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
+                        }
+                        else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
+                        {
+                            cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
+                        }
+
+                        if (player.D4C == false)
+                        {
+                            num = 2;
+                            AllTexture = texture;
+                        }
+                        else
+                        {
+                            AllTexture = secoundTex;
+                        }
+
+                        spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White);
+                    }
                 }
-
             }
-
         }
     }
 }
