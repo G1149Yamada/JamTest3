@@ -39,9 +39,9 @@ namespace Gamejum
         private int searchY;
         private int searchListNumber;
 
-        private float W;//Y軸に使う
+        private float jumpVelocity;//Y軸に使う
         private int jumpTop;
-        private int Z;
+        private float speed;
 
         private int rightWall;
         private int bottomWall;
@@ -89,8 +89,8 @@ namespace Gamejum
             searchY = new int();
             searchListNumber = new int();
 
-            Z = -1;
-            W = 1;
+            speed = -1.5f;
+            jumpVelocity = 1;
 
             rightWall = mapData.GetLength(1) * width;
             bottomWall = mapData.GetLength(0) * height;
@@ -153,13 +153,14 @@ namespace Gamejum
 
         public void IceMecer()
         {
+
         }
 
         public void Update(GameTime gameTime)
         {
             velocity = new Vector2(5, 5);
-            position.X -= velocity.X * Z;
-            position.Y += velocity.Y * W;
+            position.X -= velocity.X * speed;
+            position.Y += velocity.Y * jumpVelocity;
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
@@ -172,6 +173,10 @@ namespace Gamejum
                     if (D4Ccount == 2)
                     {
                         D4Ccount = 0;
+                    }
+                    if (D4Ccount > 10)
+                    {
+
                     }
                 }
             }
@@ -221,7 +226,6 @@ namespace Gamejum
             //スクロール横
             if (position.X <= Screen.Width / 2 - width / 2)
             {
-
             }
             else if (position.X >= Screen.Width / 2 - width / 2 && position.X < rightWall - Screen.Width / 2 - width)
             {
@@ -238,11 +242,11 @@ namespace Gamejum
             }
             else if (position.Y >= Screen.Height / 2 - height / 2 && position.Y < bottomWall - Screen.Height / 2 - height)
             {
-                cameraPosition.Y = Screen.Height / 2 - height / 2;
+                cameraPosition.Y = Screen.Height / 2 - height / 2 + 25;
             }
             else if (position.Y >= bottomWall - Screen.Height / 2 - height && position.Y <= bottomWall)
             {
-                cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2;
+                cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2 + 25;
             }
         }
 
@@ -278,22 +282,22 @@ namespace Gamejum
                     position.X = SX - 128;
                 }
             }
-            if (isHit == true&&isJump==false)
+            if (isHit == true && isJump == false)
             {
                 if (V.X >= 0 && searchListNumber == 3)
                 {
-                    Z = -1;
+                    speed = -1.5f;
                 }
                 else if (V.X < 0 && searchListNumber == 1)
                 {
-                    Z = 1;
+                    speed = 1.5f;
                 }
             }
             else
             {
-                if ((searchListNumber == 4 && V.X >= 0 && V.Y < 0)|| (searchListNumber == 5 && V.X <= 0 && V.Y < 0))
+                if ((searchListNumber == 4 && V.X >= 0 && V.Y < 0) || (searchListNumber == 5 && V.X <= 0 && V.Y < 0))
                 {
-                    Z = 0;
+                    speed = 0;
                 }
             }
 
@@ -301,22 +305,29 @@ namespace Gamejum
             {
                 if ((V.Y < 0 && searchListNumber == 6) || isJump == true)
                 {
-                    W = -5;
-                    jumpTop -= (int)W;
+                    jumpVelocity = -5;
+                    jumpTop = jumpTop - (int)jumpVelocity;
                     isJump = true;
+                    if (speed == -1.5f)
+                    {
+                        speed = -2.3f;
+                    }
+                    else if (speed == 1.5f)
+                    {
+                        speed = 2.3f;
+                    }
                 }
-                if ((jumpTop == 15 || V.Y > 0))
+                if ((jumpTop > 20 || V.Y > 0))
                 {
-                    W = 2.0f;
+                    jumpVelocity = 5.0f;
                     jumpTop = 0;
                     isJump = false;
                     if (V.Y > 0)
                     {
-                        W = 1;
+                        jumpVelocity = 1;
                     }
                 }
             }
-            Console.WriteLine(isJump);
         }
 
         public void Draw(SpriteBatch spriteBatch)
