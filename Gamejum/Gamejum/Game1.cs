@@ -52,6 +52,8 @@ namespace Gamejum //コミットとプッシュのテスト
             player.name = Content.Load<Texture2D>("BotRigth");
             player.secoundname = Content.Load<Texture2D>("仮立ち絵２");
             mapDraw.secoundTex = Content.Load<Texture2D>("jumpblock");
+            player.iceBlock = Content.Load<Texture2D>("IceMeker(仮)");
+            mapDraw.TripleJump = Content.Load<Texture2D>("TripleJumpBlock");
             // TODO: use this.Content to load your game content here
         }
 

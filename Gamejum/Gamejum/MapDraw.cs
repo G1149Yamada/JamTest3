@@ -16,9 +16,11 @@ namespace Gamejum
 
         public Texture2D texture;
         public Texture2D secoundTex;
+        public Texture2D TripleJump;
         private Texture2D AllTexture;
         private Vector2 worldPosition;
         private Vector2 cameraPosition;
+        private float Alffa;
 
         private int[,] mapData;
 
@@ -136,7 +138,7 @@ namespace Gamejum
 
                         spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White);
                     }
-                    else if (mapData[y, x] == 6)
+                    else if (mapData[y, x] == 6||mapData[y,x]==7)
                     {
                         num = 0;
 
@@ -171,13 +173,64 @@ namespace Gamejum
                         {
                             num = 2;
                             AllTexture = texture;
+                            Alffa = 0.7f;
                         }
                         else
                         {
-                            AllTexture = secoundTex;
+                            if (mapData[y, x] == 6)
+                            {
+                                AllTexture = secoundTex;
+                            }
+                            if (mapData[y, x] == 7)
+                            {
+                                AllTexture = TripleJump;
+                            }
+                            Alffa = 1f;
                         }
 
-                        spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White);
+                        spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White*Alffa);
+                    }
+                    else if (mapData[y, x] == 8)
+                    {
+                        num = 0;
+
+                        if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
+                        {
+
+                        }
+                        else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
+                        {
+                            cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
+                        }
+                        else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
+                        {
+                            cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
+                        }
+
+                        //もし高さがスクリーンの真ん中により上に行くとき
+                        if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
+                        {
+
+                        }
+                        else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
+                        {
+                            cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
+                        }
+                        else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
+                        {
+                            cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
+                        }
+                        if(player.D4C==true)
+                        {
+                            num = 2;
+                            AllTexture = texture;
+                            Alffa = 0.7f;
+                        }
+                        else
+                        {
+                            AllTexture = TripleJump;
+                        }
+                        spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White * Alffa);
                     }
                 }
             }

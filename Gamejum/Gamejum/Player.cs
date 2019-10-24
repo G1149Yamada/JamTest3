@@ -16,6 +16,7 @@ namespace Gamejum
         private Vector2 velocity;
         public Texture2D name;
         public Texture2D secoundname;
+        public Texture2D iceBlock;
         public int DrawCount;
         public int[,] mapData;
 
@@ -23,11 +24,15 @@ namespace Gamejum
         private bool isJump;
 
         public float count; //押す間隔
+        private float jumpCount;
         public bool D4C;//平衡世界
         public int D4Ccount;
 
         private int X;
         private int Y;
+        private Vector2 icePosition;
+        private int iceSize;
+        private float Distance;
 
         private Vector2 blockPosition;
         private Vector2 vect;
@@ -40,8 +45,9 @@ namespace Gamejum
         private int searchListNumber;
 
         private float jumpVelocity;//Y軸に使う
-        private int jumpTop;
         private float speed;
+        private int iceTimer;
+        //private int iceEsing;
 
         private int rightWall;
         private int bottomWall;
@@ -52,9 +58,10 @@ namespace Gamejum
 
         public Player()
         {
-
             position = new Vector2(200, 2150);
             cameraPosition = position;
+            Distance = 16;
+            icePosition = new Vector2(0, 700);
             velocity = Vector2.Zero;
             DrawCount = 1;
             X = 0;
@@ -66,6 +73,7 @@ namespace Gamejum
             mapChip1.Ini();
 
             isJump = false;
+            jumpCount = 1;
 
             mapData = mapChip1.GetMapData();
             blockList = new List<Vector2>();
@@ -78,7 +86,7 @@ namespace Gamejum
             {
                 for (X = 0; X < mapData.GetLength(1); X++)
                 {
-                    if (mapData[Y, X] == 0 || mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5 || mapData[Y, X] == 6)
+                    if (mapData[Y, X] == 0 || mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5 || mapData[Y, X] == 6||mapData[Y,X]==7||mapData[Y,X]==8)
 
                         blockPosition = new Vector2(X * width, Y * height);
                     blockList.Add(blockPosition);
@@ -89,8 +97,11 @@ namespace Gamejum
             searchY = new int();
             searchListNumber = new int();
 
-            speed = -1.5f;
+            speed = 1.5f;
             jumpVelocity = 1;
+            iceSize = 15;
+            //iceEsing = 2;
+            iceTimer = 1;
 
             rightWall = mapData.GetLength(1) * width;
             bottomWall = mapData.GetLength(0) * height;
@@ -103,34 +114,40 @@ namespace Gamejum
         /// <summary>
         /// 当たり判定
         /// </summary>
-        /// <param name="SX">ブロックのPosition.X</param>
-        /// <param name="SY">ブロックのposiiton.Y</param>
-        /// <param name="V">二点間の距離(ベクトル)</param>
-        public void Hit(int SX, int SY, Vector2 V)
+        /// <param name="SizeX">ブロックのPosition.X</param>
+        /// <param name="SizeY">ブロックのposiiton.Y</param>
+        /// <param name="Vector">プレイヤーとブロックの二点間の距離(ベクトル)</param>
+        public void Hit(int SizeX, int SizeY, Vector2 Vector)
         {
-            searchListNumber = mapData[SY / height, SX / width];
+            searchListNumber = mapData[SizeY / height, SizeX / width];
             switch (searchListNumber)
             {
                 case 1:
-                    HIT(SX, SY, V);
+                    HIT(SizeX, SizeY, Vector);
                     break;
 
                 case 2:
-                    HIT(SX, SY, V);
+                    HIT(SizeX, SizeY, Vector);
                     break;
 
                 case 3:
-                    HIT(SX, SY, V);
+                    HIT(SizeX, SizeY, Vector);
                     break;
                 case 4:
-                    HIT(SX, SY, V);
+                    HIT(SizeX, SizeY, Vector);
                     break;
                 case 5:
-                    HIT(SX, SY, V);
+                    HIT(SizeX, SizeY, Vector);
                     break;
                 case 6:
-                    HIT(SX, SY, V);
+                    HIT(SizeX, SizeY, Vector);
                     break;
+                case 7:
+                    HIT(SizeX, SizeY, Vector);
+                    break;
+                case 8:
+                    HIT(SizeX, SizeY, Vector);
+                    break; 
             }
         }
 
@@ -151,17 +168,12 @@ namespace Gamejum
             }
         }
 
-        public void IceMecer()
-        {
-
-        }
-
         public void Update(GameTime gameTime)
         {
             velocity = new Vector2(5, 5);
-            position.X -= velocity.X * speed;
+            position.X += velocity.X * speed;
             position.Y += velocity.Y * jumpVelocity;
-
+            icePosition.X += cameraPosition.X * Distance;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
@@ -174,15 +186,23 @@ namespace Gamejum
                     {
                         D4Ccount = 0;
                     }
-                    if (D4Ccount > 10)
-                    {
-
-                    }
+                }
+                if (count > 50)
+                {
+                    iceSize = 0;
                 }
             }
             else
             {
-                count = 0.0f;
+                iceSize++;
+                if (iceSize >= 1)
+                {
+                    if (iceSize >= 255 + 16)
+                    {
+                        iceSize = 256 + 16;
+                    }
+                    count = 0;
+                }
             }
 
 
@@ -202,6 +222,8 @@ namespace Gamejum
                (int)position.X,
                (int)position.Y,
                128, 128);
+
+
 
             //ブロックの処理
             foreach (var b in blockList)
@@ -255,77 +277,125 @@ namespace Gamejum
             return position;
         }
 
-        private void HIT(int SX, int SY, Vector2 V)
+        private void HIT(int SizeX, int SizeY, Vector2 Vctor)
         {
-            if (Math.Abs(V.X) < Math.Abs(V.Y))
+            if (Math.Abs(Vctor.X) < Math.Abs(Vctor.Y))
             {
-                if (V.Y < 0)//top
+                if (Vctor.Y < 0)//top
                 {
-                    position.Y = SY - 128;
+                    position.Y = SizeY - 128;
                     velocity.Y = 0;
                     isHit = true;
                 }
-                else if (V.Y > 0)
+                else if (Vctor.Y > 0)
                 {
-                    position.Y = SY + 128;
+                    position.Y = SizeY + 128;
                 }
             }
 
-            else if (Math.Abs(V.X) > Math.Abs(V.Y))
+            else if (Math.Abs(Vctor.X) > Math.Abs(Vctor.Y))
             {
-                if (V.X >= 0)
+                if (Vctor.X >= 0)
                 {
-                    position.X = SX + 128;
+                    position.X = SizeX + 128;
+                    if (speed > 0)
+                    {
+                        speed = 1.5f;
+                    }
                 }
-                else if (V.X < 0)
+                else if (Vctor.X < 0)
                 {
-                    position.X = SX - 128;
+                    position.X = SizeX - 128;
+                    if (speed < 0)
+                    {
+                        speed = -1.5f;
+                    }
                 }
             }
             if (isHit == true && isJump == false)
             {
-                if (V.X >= 0 && searchListNumber == 3)
-                {
-                    speed = -1.5f;
-                }
-                else if (V.X < 0 && searchListNumber == 1)
+                if (Vctor.X >= 0 && searchListNumber == 3)
                 {
                     speed = 1.5f;
+                }
+                else if (Vctor.X <= 0 && searchListNumber == 1)
+                {
+                    speed = -1.5f;
                 }
             }
             else
             {
-                if ((searchListNumber == 4 && V.X >= 0 && V.Y < 0) || (searchListNumber == 5 && V.X <= 0 && V.Y < 0))
+                if ((searchListNumber == 4 && Vctor.Y < 0) || (searchListNumber == 5 && Vctor.Y < 0))
                 {
                     speed = 0;
                 }
             }
-
             if (D4C == true)
             {
-                if ((V.Y < 0 && searchListNumber == 6) || isJump == true)
+                if ((searchListNumber == 6) || isJump == true)
                 {
                     jumpVelocity = -5;
-                    jumpTop = jumpTop - (int)jumpVelocity;
+                    jumpCount++;
                     isJump = true;
-                    if (speed == -1.5f)
+
+                    if ((jumpCount >= 40 || Vctor.Y > 0) || (searchListNumber == 4 || searchListNumber == 5))
                     {
-                        speed = -2.3f;
-                    }
-                    else if (speed == 1.5f)
-                    {
-                        speed = 2.3f;
+                        jumpVelocity = 1.5f;
+                        isJump = false;
                     }
                 }
-                if ((jumpTop > 20 || V.Y > 0))
+                if (isJump == false)
                 {
-                    jumpVelocity = 5.0f;
-                    jumpTop = 0;
-                    isJump = false;
-                    if (V.Y > 0)
+                    if (speed >= 0 && Vctor.X > 0 && searchListNumber == 5)
                     {
-                        jumpVelocity = 1;
+                        speed = 1.5f;
                     }
+                    if (speed <= 0 && Vctor.X < 0 && searchListNumber == 4)
+                    {
+                        speed = -1.5f;
+                    }
+                    jumpCount = 0;
+                }
+                if (searchListNumber == 7)
+                {
+
+                }
+            }
+
+            else
+            {
+                jumpCount++;
+                if ((jumpCount >= 20 || Vctor.Y > 0) || searchListNumber == 4 || searchListNumber == 5)
+                {
+                    if (jumpCount == 25)
+                    {
+                        jumpCount = 0;
+                    }
+                    isJump = false;
+                    jumpVelocity = 1.5f;
+                }
+                if (Vctor.Y > 0 || isJump == false)
+                {
+                    if (speed >= 0 && Vctor.X > 0 && searchListNumber == 5)
+                    {
+                        speed = 1.5f;
+                    }
+                    if (speed <= 0 && Vctor.X < 0 && searchListNumber == 4)
+                    {
+                        speed = -1.5f;
+                    }
+                    jumpCount = 0;
+                }
+            }
+            if (isJump == true)
+            {
+                if (speed == -1.5f && Vctor.X > 0)
+                {
+                    speed = -3.0f;
+                }
+                else if (speed == 1.5f && Vctor.X < 0)
+                {
+                    speed = 3.0f;
                 }
             }
         }
@@ -340,6 +410,9 @@ namespace Gamejum
             {
                 spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
             }
+
+            spriteBatch.Draw(iceBlock, icePosition, new Rectangle(0, 0, 128, iceSize), Color.White);
+
         }
     }
 }
