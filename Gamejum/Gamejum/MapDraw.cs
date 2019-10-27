@@ -190,7 +190,7 @@ namespace Gamejum
 
                         spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White*Alffa);
                     }
-                    else if (mapData[y, x] == 8)
+                    else if (mapData[y, x] == 8||mapData[y,x]==9)
                     {
                         num = 0;
 
@@ -228,9 +228,51 @@ namespace Gamejum
                         }
                         else
                         {
-                            AllTexture = TripleJump;
+                            if (mapData[y, x] == 9)
+                            {
+                                AllTexture = secoundTex;
+                            }
+                            if (mapData[y, x] == 8)
+                            {
+                                AllTexture = TripleJump;
+                            }
+
                         }
                         spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White * Alffa);
+                    }
+                    else if (mapData[y, x] == 10)
+                    {
+                        if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
+                        {
+
+                        }
+                        else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
+                        {
+                            cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
+                        }
+                        else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
+                        {
+                            cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
+                        }
+
+                        //もし高さがスクリーンの真ん中により上に行くとき
+                        if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
+                        {
+
+                        }
+                        else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
+                        {
+                            cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
+                        }
+                        else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
+                        {
+                            cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
+                        }
+                        else if (mapData[y, x] == 10)
+                        {
+                            num = 1;
+                        }
+                        spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.Blue);
                     }
                 }
             }
