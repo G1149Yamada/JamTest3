@@ -11,13 +11,15 @@ namespace Gamejum
 {
     class Player
     {
-        public bool isGamePlay=false;
+        public bool isGamePlay = false;
         private Vector2 position;
         private Vector2 cameraPosition;
         private Vector2 velocity;
         public Texture2D name;
         public Texture2D secoundname;
         public Texture2D iceBlock;
+        public Texture2D rightCatch;
+        public Texture2D leftCatch;
         public int[,] mapData;
 
         private bool isHit;//壁掴みようの判定
@@ -53,6 +55,7 @@ namespace Gamejum
         private int bottomWall;
         private int DrawCount;
         private int anicount;
+        private float alpha;
 
         private bool bottom;
         private KeyboardState previousKey;//キーボード
@@ -155,11 +158,9 @@ namespace Gamejum
                     break;
                 case 4:
                     HIT(SizeX, SizeY, Vector);
-                    four=true;
                     break;
                 case 5:
                     HIT(SizeX, SizeY, Vector);
-                    five = true;
                     break;
                 case 6:
                     HIT(SizeX, SizeY, Vector);
@@ -189,7 +190,7 @@ namespace Gamejum
                         tuch = true;
                         jumpVelocity = -2;
                         speed = -2;
-                    Console.WriteLine("いいいい ");
+                        five = true;
                     }
                     break;
                 case 8:
@@ -201,7 +202,7 @@ namespace Gamejum
                         tuch = true;
                         jumpVelocity = -2;
                         speed = 2;
-                    Console.WriteLine("ああああ");
+                        four = true;
                     }
                     break;
                 case 9:
@@ -251,6 +252,7 @@ namespace Gamejum
         {
             position.X += velocity.X * speed;
             position.Y += velocity.Y * jumpVelocity;
+            four = false;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
@@ -271,16 +273,7 @@ namespace Gamejum
             }
 
             //アニメーションカウント
-            anicount++;
-            if (anicount > 2)
-            {
-                DrawCount++;
-                anicount = 0;
-                if (DrawCount <= 13)
-                {
-                    DrawCount %= 13;
-                }
-            }
+
             GetMap();
 
             Rectangle playerRect = new Rectangle(
@@ -328,7 +321,7 @@ namespace Gamejum
                     else if (jumpCount == 0 && tuchCount == 0)
                     {
                         jumpVelocity = 1.5f;
-                        if (speed > 0 )
+                        if (speed > 0)
                         {
                             speed = 1.5f;
                         }
@@ -360,12 +353,29 @@ namespace Gamejum
             //スクロールした側の場合
             else if (position.Y >= Screen.Height / 2 - height / 2 && position.Y < bottomWall - Screen.Height / 2 - height)
             {
-                cameraPosition.Y = Screen.Height / 2 - height / 2+25;
+                cameraPosition.Y = Screen.Height / 2 - height / 2 + 25;
             }
             //スクロール上側の場合
             else if (position.Y >= bottomWall - Screen.Height / 2 - height && position.Y <= bottomWall)
             {
-                cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2+25 ;
+                cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2 + 25;
+            }
+            if (four == false && five == false)
+            {
+                anicount++;
+                if (anicount > 2)
+                {
+                    DrawCount++;
+                    anicount = 0;
+                    if (DrawCount <= 13)
+                    {
+                        DrawCount %= 13;
+                    }
+                }
+            }
+            if (four == true || five == true)
+            {
+                alpha = 0;
             }
         }
 
@@ -385,6 +395,7 @@ namespace Gamejum
                     position.Y = SizeY - 128;
                     isHit = true;
                     top = false;
+                    alpha = 1;
                 }
                 else if (Vctor.Y > 0)
                 {
@@ -419,13 +430,17 @@ namespace Gamejum
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (speed<0)
+            if (speed < 0)
             {
-                spriteBatch.Draw(name, cameraPosition, new Rectangle(128*DrawCount, 0, 128, 128), Color.White);
+                spriteBatch.Draw(name, cameraPosition, new Rectangle(128 * DrawCount, 0, 128, 128), Color.White * alpha);
             }
-            else if(speed>0)
+            else if (speed > 0)
             {
-                spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(128*DrawCount, 0, 128, 128), Color.White);
+                spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(128 * DrawCount, 0, 128, 128), Color.White * alpha);
+            }
+            if (four == true)
+            {
+                spriteBatch.Draw(leftCatch, cameraPosition, Color.White);
             }
         }
     }

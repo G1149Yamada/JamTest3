@@ -60,6 +60,8 @@ namespace Gamejum //コミットとプッシュのテスト
             mapDraw.TripleJump = Content.Load<Texture2D>("TripleJumpBlock");
             title.title = Content.Load<Texture2D>("Title");
             clear.texture = Content.Load<Texture2D>("Title");
+            player.rightCatch = Content.Load<Texture2D>("壁張り付き");
+            player.leftCatch = Content.Load<Texture2D>("壁張り付き左");
             // TODO: use this.Content to load your game content here
         }
 
@@ -90,6 +92,7 @@ namespace Gamejum //コミットとプッシュのテスト
                     {
                         loop = Loop.GamePlay;
                         title.isTitle = false;
+                        title.pushcount = 0;
                     }
                     break;
                 case Loop.GamePlay:
