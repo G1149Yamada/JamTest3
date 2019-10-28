@@ -13,7 +13,11 @@ namespace Gamejum //コミットとプッシュのテスト
         SpriteBatch spriteBatch;
         MapChip1 MapChip = new MapChip1();
         Player player = new Player();
-        MapDraw mapDraw = new MapDraw();
+        GamePlay mapDraw = new GamePlay();
+        Title title = new Title();
+        Loop loop;
+        Clear clear = new Clear();
+        private int count = 0;
 
         public Game1()
         {
@@ -54,6 +58,8 @@ namespace Gamejum //コミットとプッシュのテスト
             mapDraw.secoundTex = Content.Load<Texture2D>("jumpblock");
             player.iceBlock = Content.Load<Texture2D>("IceMeker(仮)");
             mapDraw.TripleJump = Content.Load<Texture2D>("TripleJumpBlock");
+            title.title = Content.Load<Texture2D>("Title");
+            clear.texture = Content.Load<Texture2D>("Title");
             // TODO: use this.Content to load your game content here
         }
 
@@ -76,8 +82,37 @@ namespace Gamejum //コミットとプッシュのテスト
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.Update(gameTime);
-            mapDraw.Updata(gameTime);
+            switch (loop)
+            {
+                case Loop.Title:
+                    title.Update(gameTime);
+                    if (title.isTitle == true)
+                    {
+                        loop = Loop.GamePlay;
+                        title.isTitle = false;
+                    }
+                    break;
+                case Loop.GamePlay:
+                    player.Update(gameTime);
+                    mapDraw.Updata(gameTime);
+                    if (player.isGamePlay == true)
+                    {
+                        loop = Loop.Clear;
+                        player.isGamePlay = false;
+                    }
+                    break;
+                case Loop.Clear:
+                    clear.Update(gameTime);
+                    if (clear.isClear == true)
+                    {
+                        loop = Loop.Title;
+                        player.Initialize();
+                        mapDraw.Initialize();
+                        clear.isClear = false;
+                    }
+                    break;
+            }
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -93,8 +128,20 @@ namespace Gamejum //コミットとプッシュのテスト
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            mapDraw.Draw(spriteBatch);
-            player.Draw(spriteBatch);
+            switch (loop)
+            {
+                case Loop.Title:
+                    title.Draw(spriteBatch);
+                    break;
+                case Loop.GamePlay:
+                    mapDraw.Draw(spriteBatch);
+                    player.Draw(spriteBatch);
+                    break;
+                case Loop.Clear:
+                    clear.Draw(spriteBatch);
+                    break;
+            }
+
             spriteBatch.End();
 
 

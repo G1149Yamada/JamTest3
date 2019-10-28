@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Gamejum
 {
-    class MapDraw
+    class GamePlay
     {
         MapChip1 mapChip1;
 
@@ -39,7 +39,7 @@ namespace Gamejum
         public void Initialize()
         {
             player = new Player();
-
+            player.Initialize();
             mapChip1 = new MapChip1();
             mapChip1.Ini();
 

@@ -41,9 +41,13 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Clear.cs" />
+    <Compile Include="GameSeen.cs" />
+    <Compile Include="Loop.cs" />
+    <Compile Include="Title.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="MapChip1.cs" />
-    <Compile Include="MapDraw.cs" />
+    <Compile Include="GamePlay.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
