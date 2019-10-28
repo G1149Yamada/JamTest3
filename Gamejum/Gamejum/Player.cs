@@ -41,6 +41,7 @@ namespace Gamejum
         private int searchX;
         private int searchY;
         private int searchListNumber;
+        private bool four;
 
         private float jumpVelocity;//Y軸に使う
         private float speed;
@@ -65,6 +66,7 @@ namespace Gamejum
             isJump = false;
             jumpCount = 1;
             tuch = false;
+            four = false;
 
             tuchCount = 0;
             anicount = 0;
@@ -114,8 +116,19 @@ namespace Gamejum
         {
             position = new Vector2(200, 2150);
             velocity = new Vector2(5, 5);
-            D4C = true;
-            GetMap();
+
+            isJump = false;
+            jumpCount = 1;
+            tuch = false;
+            four = false;
+
+            tuchCount = 0;
+            anicount = 0;
+
+            previousKey = Keyboard.GetState();//キーボード
+
+            speed = 1.5f;
+            jumpVelocity = 1;
 
         }
 
@@ -141,6 +154,7 @@ namespace Gamejum
                     break;
                 case 4:
                     HIT(SizeX, SizeY, Vector);
+                    four=true;
                     break;
                 case 5:
                     HIT(SizeX, SizeY, Vector);
@@ -166,8 +180,9 @@ namespace Gamejum
                     break;
                 case 7:
                     HIT(SizeX, SizeY, Vector);
+                    tuchCount = 0;
                     isJump = false ;
-                    if (D4C == true&&vect.X<0)
+                    if (D4C == true||four==true)
                     {
                         jumpVelocity = -2;
                         speed = -2;
@@ -176,8 +191,9 @@ namespace Gamejum
                     break;
                 case 8:
                     HIT(SizeX, SizeY, Vector);
+                    tuchCount = 0;
                     isJump=false;
-                    if (D4C == false&&vect.X>0)
+                    if (D4C == false||four==true)
                     {
                         jumpVelocity = -2;
                         speed = 2;
@@ -204,7 +220,7 @@ namespace Gamejum
                     }
                     break;
                 case 10:
-                    isHIT(SizeX, SizeY, Vector);
+                    HIT(SizeX, SizeY, Vector);
                     isGamePlay = true;
                     break;
             }
@@ -284,7 +300,6 @@ namespace Gamejum
                     vect = position - b;
                     Hit(searchX, searchY, vect);
 
-                    Console.WriteLine(tuch);
                     if (tuch == true||tuchCount>0)
                     {
                         isJump = false;
@@ -321,7 +336,6 @@ namespace Gamejum
                 }
             }
             cameraPosition = position;
-
             //スクロール横
             if (position.X <= Screen.Width / 2 - width / 2)
             {
@@ -339,13 +353,15 @@ namespace Gamejum
             if (position.Y <= Screen.Height / 2 - height / 2)
             {
             }
+            //スクロールした側の場合
             else if (position.Y >= Screen.Height / 2 - height / 2 && position.Y < bottomWall - Screen.Height / 2 - height)
             {
-                cameraPosition.Y = Screen.Height / 2 - height / 2 + 25;
+                cameraPosition.Y = Screen.Height / 2 - height / 2+25;
             }
+            //スクロール上側の場合
             else if (position.Y >= bottomWall - Screen.Height / 2 - height && position.Y <= bottomWall)
             {
-                cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2 + 25;
+                cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2+25 ;
             }
         }
 
@@ -394,31 +410,6 @@ namespace Gamejum
                 else if (Vctor.X <= 0 && searchListNumber == 1)
                 {
                     speed = -1.5f;
-                }
-            }
-        }
-        private void isHIT(int SizeX, int SizeY, Vector2 Vctor)
-        {
-            if (Math.Abs(Vctor.X) < Math.Abs(Vctor.Y))
-            {
-                if (Vctor.Y < 0)//top
-                {
-                    position.Y = SizeY - 128;
-                }
-                else if (Vctor.Y > 0)
-                {
-                    bottom = false;
-                }
-            }
-            else if (Math.Abs(Vctor.X) > Math.Abs(Vctor.Y))
-            {
-                if (Vctor.X >= 0)
-                {
-                    position.X = SizeX + 128;
-                }
-                else if (Vctor.X < 0)
-                {
-                    position.X = SizeX - 128;
                 }
             }
         }

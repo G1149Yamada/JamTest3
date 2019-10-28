@@ -54,7 +54,7 @@ namespace Gamejum
             {
                 for (x = 0; x < mapData.GetLength(1); x++)
                 {
-                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3)
+                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3||mapData[y,x]==4||mapData[y,x]==5||mapData[y,x]==6||mapData[y,x]==7||mapData[y,x]==8||mapData[y,x]==9||mapData[y,x]==10)
                     {
                         worldPosition = new Vector2(x * width, y * height);
                     }
@@ -77,6 +77,7 @@ namespace Gamejum
 
         public void Draw(SpriteBatch spriteBatch)
         {
+
             for (int y = 0; y < mapData.GetLength(0); y++)
             {
                 for (int x = 0; x < mapData.GetLength(1); x++)
@@ -88,8 +89,8 @@ namespace Gamejum
                     {
                         num = 0;
 
-                        Scroll(x, y);
-
+                        ScrollX(x);
+                        ScrollY(y);
                         if (mapData[y, x] == 1 || mapData[y, x] == 5)
                         {
                             num = 0;
@@ -109,8 +110,8 @@ namespace Gamejum
                     {
                         num = 0;
 
-                        Scroll(x, y);
-
+                        ScrollX(x);
+                        ScrollY(y);
                         if (player.D4C == false)
                         {
                             num = 2;
@@ -135,8 +136,9 @@ namespace Gamejum
                     else if (mapData[y, x] == 8||mapData[y,x]==9)
                     {
                         num = 0;
-                        Scroll(y,x);
-                        if(player.D4C==true)
+                        ScrollX(x);
+                        ScrollY(y);
+                        if (player.D4C==true)
                         {
                             num = 2;
                             AllTexture = texture;
@@ -158,16 +160,17 @@ namespace Gamejum
                     }
                     else if (mapData[y, x] == 10)
                     {
-                        Scroll(y, x);
+                        ScrollX(x);
+                        ScrollY(y);
                         spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.Blue);
                     }
                 }
             }
         }
 
-        private void Scroll(int y, int x)
+        private void ScrollX(int x)
         {
-            if (playerWorldPosition.X <= (Screen.Width / 2) - width / 2)
+            if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
             {
 
             }
@@ -179,8 +182,10 @@ namespace Gamejum
             {
                 cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
             }
+        }
 
-            //もし高さがスクリーンの真ん中により上に行くとき
+        private void ScrollY(int Y)
+        {
             if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
             {
 
@@ -192,10 +197,6 @@ namespace Gamejum
             else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
             {
                 cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
-            }
-            else if (mapData[y, x] == 10)
-            {
-                num = 1;
             }
         }
     }
