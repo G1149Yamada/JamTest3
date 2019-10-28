@@ -139,6 +139,8 @@ namespace Gamejum //コミットとプッシュのテスト
                     break;
                 case Loop.Clear:
                     clear.Draw(spriteBatch);
+                    player.Initialize();
+                    mapDraw.Initialize();
                     break;
             }
 

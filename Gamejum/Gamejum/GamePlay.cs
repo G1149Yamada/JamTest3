@@ -39,7 +39,6 @@ namespace Gamejum
         public void Initialize()
         {
             player = new Player();
-            player.Initialize();
             mapChip1 = new MapChip1();
             mapChip1.Ini();
 
@@ -84,44 +83,12 @@ namespace Gamejum
                 {
                     worldPosition = new Vector2(x * width, y * height);
                     cameraPosition = worldPosition;
-                    if (mapData[y, x] == 0)
-                    {
-
-                    }
 
                     if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3 || mapData[y, x] == 4 || mapData[y, x] == 5)
                     {
                         num = 0;
 
-                        ////spriteBatch.Draw(texture, cameraPosition, new Rectangle(0, 0, 64, 64), Color.White);
-                        if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
-                        {
-                            //new Vector2(cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width),cameraPosition.Y);
-
-                            cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
-                        }
-                        else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
-                        {
-                            cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
-                        }
-
-                        //もし高さがスクリーンの真ん中により上に行くとき
-                        if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
-                        }
-                        else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
-                        }
+                        Scroll(x, y);
 
                         if (mapData[y, x] == 1 || mapData[y, x] == 5)
                         {
@@ -142,32 +109,7 @@ namespace Gamejum
                     {
                         num = 0;
 
-                        if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
-                        {
-                            cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
-                        }
-                        else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
-                        {
-                            cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
-                        }
-
-                        //もし高さがスクリーンの真ん中により上に行くとき
-                        if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
-                        }
-                        else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
-                        }
+                        Scroll(x, y);
 
                         if (player.D4C == false)
                         {
@@ -193,33 +135,7 @@ namespace Gamejum
                     else if (mapData[y, x] == 8||mapData[y,x]==9)
                     {
                         num = 0;
-
-                        if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
-                        {
-                            cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
-                        }
-                        else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
-                        {
-                            cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
-                        }
-
-                        //もし高さがスクリーンの真ん中により上に行くとき
-                        if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
-                        }
-                        else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
-                        }
+                        Scroll(y,x);
                         if(player.D4C==true)
                         {
                             num = 2;
@@ -242,39 +158,44 @@ namespace Gamejum
                     }
                     else if (mapData[y, x] == 10)
                     {
-                        if (playerWorldPosition.X <= Screen.Width / 2 - width / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
-                        {
-                            cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
-                        }
-                        else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
-                        {
-                            cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
-                        }
-
-                        //もし高さがスクリーンの真ん中により上に行くとき
-                        if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
-                        {
-
-                        }
-                        else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
-                        }
-                        else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
-                        {
-                            cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
-                        }
-                        else if (mapData[y, x] == 10)
-                        {
-                            num = 1;
-                        }
+                        Scroll(y, x);
                         spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.Blue);
                     }
                 }
+            }
+        }
+
+        private void Scroll(int y, int x)
+        {
+            if (playerWorldPosition.X <= (Screen.Width / 2) - width / 2)
+            {
+
+            }
+            else if (playerWorldPosition.X >= Screen.Width / 2 - width / 2 && playerWorldPosition.X < rightWall - Screen.Width / 2 - width)
+            {
+                cameraPosition.X = cameraPosition.X - (playerWorldPosition.X - Screen.Width / 2) - width / 2;
+            }
+            else if (playerWorldPosition.X >= rightWall - Screen.Width / 2 - width && playerWorldPosition.X <= rightWall)
+            {
+                cameraPosition.X = cameraPosition.X - (rightWall - Screen.Width) + width / 2;
+            }
+
+            //もし高さがスクリーンの真ん中により上に行くとき
+            if (playerWorldPosition.Y <= Screen.Height / 2 - height / 2)
+            {
+
+            }
+            else if (playerWorldPosition.Y >= Screen.Height / 2 - height / 2 && playerWorldPosition.Y < bottomWall - Screen.Height / 2 - height)
+            {
+                cameraPosition.Y = cameraPosition.Y - (playerWorldPosition.Y - Screen.Height / 2) - height / 2;
+            }
+            else if (playerWorldPosition.Y >= bottomWall - Screen.Height / 2 - height && playerWorldPosition.Y <= bottomWall)
+            {
+                cameraPosition.Y = cameraPosition.Y - (bottomWall - Screen.Height) + height / 2;
+            }
+            else if (mapData[y, x] == 10)
+            {
+                num = 1;
             }
         }
     }

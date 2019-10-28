@@ -11,14 +11,13 @@ namespace Gamejum
 {
     class Player
     {
-        public bool isGamePlay = false;
+        public bool isGamePlay=false;
         private Vector2 position;
         private Vector2 cameraPosition;
         private Vector2 velocity;
         public Texture2D name;
         public Texture2D secoundname;
         public Texture2D iceBlock;
-        public int DrawCount;
         public int[,] mapData;
 
         private bool isHit;//壁掴みようの判定
@@ -31,11 +30,7 @@ namespace Gamejum
 
         private int X;
         private int Y;
-        private Vector2 icePosition;
-        private int iceSize;
-        private float Distance;
         private bool top;
-        private bool bottom;
 
         private Vector2 blockPosition;
         private Vector2 vect;
@@ -49,13 +44,15 @@ namespace Gamejum
 
         private float jumpVelocity;//Y軸に使う
         private float speed;
-        private int iceTimer;
         private bool tuch;
         private int tuchCount;
 
         private int rightWall;
         private int bottomWall;
+        private int DrawCount;
+        private int anicount;
 
+        private bool bottom;
         private KeyboardState previousKey;//キーボード
 
         MapChip1 mapChip1;
@@ -63,25 +60,23 @@ namespace Gamejum
         public Player()
         {
             position = new Vector2(200, 2150);
-            cameraPosition = position;
-            Distance = 16;
-            icePosition = new Vector2(0, 700);
-            velocity = Vector2.Zero;
-            DrawCount = 1;
+            velocity = new Vector2(5, 5);
 
             isJump = false;
             jumpCount = 1;
             tuch = false;
+
             tuchCount = 0;
+            anicount = 0;
 
             previousKey = Keyboard.GetState();//キーボード
 
             speed = 1.5f;
             jumpVelocity = 1;
-            iceSize = 15;
-            //iceEsing = 2;
-            iceTimer = 1;
+        }
 
+        private void GetMap()
+        {
             X = 0;
             Y = 0;
             width = 128;
@@ -118,17 +113,10 @@ namespace Gamejum
         public void Initialize()
         {
             position = new Vector2(200, 2150);
-            cameraPosition = position;
-            Distance = 16;
-            icePosition = new Vector2(0, 700);
-            velocity = Vector2.Zero;
-            DrawCount = 1;
-                        searchX = new int();
-            searchY = new int();
-            searchListNumber = new int();
+            velocity = new Vector2(5, 5);
+            D4C = true;
+            GetMap();
 
-            rightWall = mapData.GetLength(1) * width;
-            bottomWall = mapData.GetLength(0) * height;
         }
 
         /// <summary>
@@ -145,11 +133,9 @@ namespace Gamejum
                 case 1:
                     HIT(SizeX, SizeY, Vector);
                     break;
-
                 case 2:
                     HIT(SizeX, SizeY, Vector);
                     break;
-
                 case 3:
                     HIT(SizeX, SizeY, Vector);
                     break;
@@ -161,15 +147,61 @@ namespace Gamejum
                     break;
                 case 6:
                     HIT(SizeX, SizeY, Vector);
+                    if (D4C == true)
+                    {
+                        isJump = true;
+                        if (isJump == true)
+                        {
+                            jumpVelocity = -5f;
+                            if (speed >= 1.5f)
+                            {
+                                speed = 3.2f;
+                            }
+                            if (speed <= -1.5f)
+                            {
+                                speed = -3.2f;
+                            }
+                        }
+                    }
                     break;
                 case 7:
                     HIT(SizeX, SizeY, Vector);
+                    isJump = false ;
+                    if (D4C == true&&vect.X<0)
+                    {
+                        jumpVelocity = -2;
+                        speed = -2;
+                        tuch = true;
+                    }
                     break;
                 case 8:
                     HIT(SizeX, SizeY, Vector);
+                    isJump=false;
+                    if (D4C == false&&vect.X>0)
+                    {
+                        jumpVelocity = -2;
+                        speed = 2;
+                        tuch = true;
+                    }
                     break;
                 case 9:
                     HIT(SizeX, SizeY, Vector);
+                    if (D4C == false)
+                    {
+                        isJump = true;
+                        if (isJump == true)
+                        {
+                            jumpVelocity = -5;
+                            if (speed >= 1.5f)
+                            {
+                                speed = 3.2f;
+                            }
+                            if (speed <= -1.5f)
+                            {
+                                speed = -3.2f;
+                            }
+                        }
+                    }
                     break;
                 case 10:
                     isHIT(SizeX, SizeY, Vector);
@@ -197,10 +229,8 @@ namespace Gamejum
 
         public void Update(GameTime gameTime)
         {
-            velocity = new Vector2(5, 5);
             position.X += velocity.X * speed;
             position.Y += velocity.Y * jumpVelocity;
-            icePosition.X += cameraPosition.X + Distance;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
@@ -214,34 +244,24 @@ namespace Gamejum
                         D4Ccount = 0;
                     }
                 }
-                if (count > 50)
-                {
-                    iceSize = 0;
-                }
             }
             else
             {
-                iceSize++;
-                if (iceSize >= 1)
+                count = 0;
+            }
+
+            //アニメーションカウント
+            anicount++;
+            if (anicount > 2)
+            {
+                DrawCount++;
+                anicount = 0;
+                if (DrawCount <= 13)
                 {
-                    if (iceSize >= 255 + 16)
-                    {
-                        iceSize = 256 + 16;
-                    }
-                    count = 0;
+                    DrawCount %= 13;
                 }
             }
-            ////アニメーションカウント
-            //count++;
-            //if (count > 4)
-            //{
-            //    DrawCount++;
-            //    count = 0;
-            //    if (DrawCount <= 4)
-            //    {
-            //        DrawCount %= 4;
-            //    }
-            //}
+            GetMap();
 
             Rectangle playerRect = new Rectangle(
                (int)position.X,
@@ -265,42 +285,35 @@ namespace Gamejum
                     Hit(searchX, searchY, vect);
 
                     Console.WriteLine(tuch);
-                    if (tuch == true)
+                    if (tuch == true||tuchCount>0)
                     {
-                        jumpVelocity = -2;
-                        if (searchListNumber == 8)
-                        {
-                            speed = 2;
-                        }
-                        else if (searchListNumber == 7)
-                        {
-                            speed = -2;
-                        }
-
+                        isJump = false;
                         tuchCount++;
-                        if (tuchCount > 100 || top == true)
+                        if (tuchCount > 80 || top == true)
                         {
                             tuch = false;
                             tuchCount = 0;
+                            jumpVelocity = 1.5f;
                         }
                     }
-                    else if (isJump == true)
+                    if (isJump == true)
                     {
                         jumpCount++;
                         if (jumpCount > 120 || top == true)
                         {
                             isJump = false;
                             jumpCount = 0;
+                            jumpVelocity = 1.5f;
                         }
                     }
                     else if (jumpCount == 0 && tuchCount == 0)
                     {
                         jumpVelocity = 1.5f;
-                        if (speed > 0 && bottom == true)
+                        if (speed > 0 )
                         {
                             speed = 1.5f;
                         }
-                        else if (speed < 0 && bottom == true)
+                        else if (speed < 0)
                         {
                             speed = -1.5f;
                         }
@@ -362,17 +375,7 @@ namespace Gamejum
 
             else if (Math.Abs(Vctor.X) > Math.Abs(Vctor.Y))
             {
-                if (Vctor.X >= 0)
-                {
-                    position.X = SizeX + 128;
-                }
-                else if (Vctor.X < 0)
-                {
-                    position.X = SizeX - 128;
-                }
-            }
-            else if (Math.Abs(Vctor.X) > Math.Abs(Vctor.Y))
-            {
+                jumpVelocity = 0.8f;
                 if (Vctor.X >= 0)
                 {
                     position.X = SizeX + 128;
@@ -393,57 +396,6 @@ namespace Gamejum
                     speed = -1.5f;
                 }
             }
-            else if ((searchListNumber == 4 && Vctor.X > 0) || (searchListNumber == 5 && Vctor.X < 0))
-            {
-                jumpVelocity = 0;
-                speed = 0;
-            }
-            if (D4C == true)
-            {
-                if (searchListNumber == 6)
-                {
-                    isJump = true;
-                    if (isJump == true)
-                    {
-                        jumpVelocity = -5f;
-                        if (speed >= 1.5f)
-                        {
-                            speed = 3.2f;
-                        }
-                        if (speed <= -1.5f)
-                        {
-                            speed = -3.2f;
-                        }
-                    }
-                }
-                if (searchListNumber == 7)
-                {
-                    tuch = true;
-                }
-            }
-            else
-            {
-                if (searchListNumber == 9)
-                {
-                    isJump = true;
-                    if (isJump == true)
-                    {
-                        jumpVelocity = -5;
-                        if (speed >= 1.5f)
-                        {
-                            speed = 3.2f;
-                        }
-                        if (speed <= -1.5f)
-                        {
-                            speed = -3.2f;
-                        }
-                    }
-                }
-                if (searchListNumber == 8)
-                {
-                    tuch = true;
-                }
-            }
         }
         private void isHIT(int SizeX, int SizeY, Vector2 Vctor)
         {
@@ -458,20 +410,28 @@ namespace Gamejum
                     bottom = false;
                 }
             }
+            else if (Math.Abs(Vctor.X) > Math.Abs(Vctor.Y))
+            {
+                if (Vctor.X >= 0)
+                {
+                    position.X = SizeX + 128;
+                }
+                else if (Vctor.X < 0)
+                {
+                    position.X = SizeX - 128;
+                }
+            }
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (D4C == false)
+            if (speed<0)
             {
-                spriteBatch.Draw(name, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
+                spriteBatch.Draw(name, cameraPosition, new Rectangle(128*DrawCount, 0, 128, 128), Color.White);
             }
-            else
+            else if(speed>0)
             {
-                spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(0, 0, 128, 128), Color.White);
+                spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(128*DrawCount, 0, 128, 128), Color.White);
             }
-
-            spriteBatch.Draw(iceBlock, icePosition, new Rectangle(0, 0, 128, iceSize), Color.White);
-
         }
     }
 }
