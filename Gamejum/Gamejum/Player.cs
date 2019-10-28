@@ -42,6 +42,7 @@ namespace Gamejum
         private int searchY;
         private int searchListNumber;
         private bool four;
+        private bool five;
 
         private float jumpVelocity;//Y軸に使う
         private float speed;
@@ -158,6 +159,7 @@ namespace Gamejum
                     break;
                 case 5:
                     HIT(SizeX, SizeY, Vector);
+                    five = true;
                     break;
                 case 6:
                     HIT(SizeX, SizeY, Vector);
@@ -181,23 +183,25 @@ namespace Gamejum
                 case 7:
                     HIT(SizeX, SizeY, Vector);
                     tuchCount = 0;
-                    isJump = false ;
-                    if (D4C == true||four==true)
+                    jumpCount = 0;
+                    if (D4C == true)
                     {
+                        tuch = true;
                         jumpVelocity = -2;
                         speed = -2;
-                        tuch = true;
+                    Console.WriteLine("いいいい ");
                     }
                     break;
                 case 8:
                     HIT(SizeX, SizeY, Vector);
                     tuchCount = 0;
-                    isJump=false;
-                    if (D4C == false||four==true)
+                    jumpCount = 0;
+                    if (D4C == false)
                     {
+                        tuch = true;
                         jumpVelocity = -2;
                         speed = 2;
-                        tuch = true;
+                    Console.WriteLine("ああああ");
                     }
                     break;
                 case 9:
@@ -300,11 +304,11 @@ namespace Gamejum
                     vect = position - b;
                     Hit(searchX, searchY, vect);
 
-                    if (tuch == true||tuchCount>0)
+                    if (tuch == true)
                     {
                         isJump = false;
                         tuchCount++;
-                        if (tuchCount > 80 || top == true)
+                        if (tuchCount > 90 || top == true)
                         {
                             tuch = false;
                             tuchCount = 0;
