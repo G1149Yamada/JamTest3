@@ -64,21 +64,6 @@ namespace Gamejum
 
         public Player()
         {
-            position = new Vector2(200, 2150);
-            velocity = new Vector2(5, 5);
-
-            isJump = false;
-            jumpCount = 1;
-            tuch = false;
-            four = false;
-
-            tuchCount = 0;
-            anicount = 0;
-
-            previousKey = Keyboard.GetState();//キーボード
-
-            speed = 1.5f;
-            jumpVelocity = 1;
         }
         public void Initialize()
         {
@@ -120,7 +105,7 @@ namespace Gamejum
             {
                 for (X = 0; X < mapData.GetLength(1); X++)
                 {
-                    if (mapData[Y, X] == 0 || mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5 || mapData[Y, X] == 6 || mapData[Y, X] == 7 || mapData[Y, X] == 8 || mapData[Y, X] == 9 || mapData[Y, X] == 10||mapData[Y,X]==11||mapData[Y,X]==12)
+                    if (mapData[Y, X] == 0 || mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5 || mapData[Y, X] == 6 || mapData[Y, X] == 7 || mapData[Y, X] == 8 || mapData[Y, X] == 9 || mapData[Y, X] == 10 || mapData[Y, X] == 11 || mapData[Y, X] == 12 || mapData[Y, X] == 13 || mapData[Y, X] == 14 || mapData[Y, X] == 15)
 
                         blockPosition = new Vector2(X * width, Y * height);
                     blockList.Add(blockPosition);
@@ -224,8 +209,8 @@ namespace Gamejum
                     }
                     break;
                 case 10:
-                    HIT(SizeX, SizeY, Vector);
                     isGamePlay = true;
+                    Goal(SizeX, SizeY, Vector);
                     break;
                 case 11:
                     HIT(SizeX, SizeY, Vector);
@@ -250,6 +235,8 @@ namespace Gamejum
                         speed = 2;
                         five = true;
                     }
+                    break;
+                default:
                     break;
             }
         }
@@ -385,16 +372,16 @@ namespace Gamejum
             }
             //if (four == false && five == false)
             //{
-                anicount++;
-                if (anicount > 2)
+            anicount++;
+            if (anicount > 2)
+            {
+                DrawCount++;
+                anicount = 0;
+                if (DrawCount <= 13)
                 {
-                    DrawCount++;
-                    anicount = 0;
-                    if (DrawCount <= 13)
-                    {
-                        DrawCount %= 13;
-                    }
+                    DrawCount %= 13;
                 }
+            }
             //}
             //if (four == true || five == true)
             //{
@@ -439,6 +426,7 @@ namespace Gamejum
                     position.X = SizeX - 128;
                 }
             }
+
             if (isHit == true)
             {
                 if (Vctor.X >= 0 && searchListNumber == 3)
@@ -451,6 +439,30 @@ namespace Gamejum
                 }
             }
         }
+
+        private void Goal(int SizeX, int SizeY, Vector2 Vctor)
+        {
+            if (Math.Abs(Vctor.X) < Math.Abs(Vctor.Y))
+            {
+                if (Vctor.Y < 0)//top
+                {
+                }
+                else if (Vctor.Y > 0)
+                {
+                }
+            }
+
+            else if (Math.Abs(Vctor.X) > Math.Abs(Vctor.Y))
+            {
+                if (Vctor.X >= 0)
+                {
+                }
+                else if (Vctor.X < 0)
+                {
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             if (speed < 0)

@@ -18,7 +18,14 @@ namespace Gamejum
         public Texture2D secoundTex;
         public Texture2D TripleJump;
         public Texture2D goal;
+        public Texture2D candle;
+        public Texture2D dimensionsCandle;
+        public Texture2D window;
+        public Texture2D dimensionsWindow;
+        public Texture2D fiveCandle;
+        public Texture2D dimensionsFiveCandle;
         private Texture2D AllTexture;
+        private Texture2D AllDecoration;
         private Vector2 worldPosition;
         private Vector2 cameraPosition;
         private float Alffa;
@@ -40,6 +47,7 @@ namespace Gamejum
         public void Initialize()
         {
             player = new Player();
+            player.Initialize();
             mapChip1 = new MapChip1();
             mapChip1.Ini();
 
@@ -55,7 +63,7 @@ namespace Gamejum
             {
                 for (x = 0; x < mapData.GetLength(1); x++)
                 {
-                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3 || mapData[y, x] == 4 || mapData[y, x] == 5 || mapData[y, x] == 6 || mapData[y, x] == 7 || mapData[y, x] == 8 || mapData[y, x] == 9 || mapData[y, x] == 10 || mapData[y, x] == 11 || mapData[y, x] == 12)
+                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3 || mapData[y, x] == 4 || mapData[y, x] == 5 || mapData[y, x] == 6 || mapData[y, x] == 7 || mapData[y, x] == 8 || mapData[y, x] == 9 || mapData[y, x] == 10 || mapData[y, x] == 11 || mapData[y, x] == 12||mapData[y,x]==13||mapData[y,x]==14||mapData[y,x]==15)
                     {
                         worldPosition = new Vector2(x * width, y * height);
                     }
@@ -164,6 +172,48 @@ namespace Gamejum
                         ScrollX(x);
                         ScrollY(y);
                         spriteBatch.Draw(goal, cameraPosition, Color.White);
+                    }
+                    else if (mapData[y, x] == 13)
+                    {
+                        ScrollX(x);
+                        ScrollY(y);
+                        if (player.D4C == true)
+                        {
+                            AllTexture = dimensionsCandle;
+                        }
+                        else
+                        {
+                            AllTexture = candle;
+                        }
+                        spriteBatch.Draw(AllTexture, cameraPosition, Color.White);
+                    }
+                    else if (mapData[y, x] == 14)
+                    {
+                        ScrollX(x);
+                        ScrollY(y);
+                        if (player.D4C == true)
+                        {
+                            AllTexture = dimensionsWindow;
+                        }
+                        else
+                        {
+                            AllTexture = window;
+                        }
+                        spriteBatch.Draw(AllTexture, cameraPosition, Color.White);
+                    }
+                    else if (mapData[y, x] == 15)
+                    {
+                        ScrollX(x);
+                        ScrollY(y);
+                        if (player.D4C == true)
+                        {
+                            AllTexture = fiveCandle;
+                        }
+                        else
+                        {
+                            AllTexture = dimensionsFiveCandle;
+                        }
+                        spriteBatch.Draw(AllTexture, cameraPosition, Color.White);
                     }
                 }
             }
