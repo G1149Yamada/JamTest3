@@ -15,8 +15,9 @@ namespace Gamejum //コミットとプッシュのテスト
         Player player = new Player();
         GamePlay mapDraw = new GamePlay();
         Title title = new Title();
-        Loop loop;
         Clear clear = new Clear();
+        Texture2D texture;
+        Loop loop;
         private int count = 0;
 
         public Game1()
@@ -24,7 +25,7 @@ namespace Gamejum //コミットとプッシュのテスト
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            //graphics.IsFullScreen=true;//フルスクリーン描画
+            graphics.IsFullScreen=true;//フルスクリーン描画
             graphics.PreferredBackBufferWidth = Screen.Width;
             graphics.PreferredBackBufferHeight = Screen.Height;
         }
@@ -52,6 +53,7 @@ namespace Gamejum //コミットとプッシュのテスト
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            texture = Content.Load<Texture2D>("wastanBack");
             mapDraw.texture = Content.Load<Texture2D>("block");
             player.name = Content.Load<Texture2D>("BotRigth");
             player.secoundname = Content.Load<Texture2D>("仮立ち絵２");
@@ -59,9 +61,10 @@ namespace Gamejum //コミットとプッシュのテスト
             player.iceBlock = Content.Load<Texture2D>("IceMeker(仮)");
             mapDraw.TripleJump = Content.Load<Texture2D>("TripleJumpBlock");
             title.title = Content.Load<Texture2D>("Title");
-            clear.texture = Content.Load<Texture2D>("Title");
+            clear.texture = Content.Load<Texture2D>("clear");
             player.rightCatch = Content.Load<Texture2D>("壁張り付き");
             player.leftCatch = Content.Load<Texture2D>("壁張り付き左");
+            mapDraw.goal = Content.Load<Texture2D>("goal");
             // TODO: use this.Content to load your game content here
         }
 
@@ -127,10 +130,18 @@ namespace Gamejum //コミットとプッシュのテスト
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+            if (player.D4C == true)
+            {
+                spriteBatch.Draw(texture, Vector2.Zero, Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(texture, Vector2.Zero, Color.White*0.5f);
+            }
             switch (loop)
             {
                 case Loop.Title:

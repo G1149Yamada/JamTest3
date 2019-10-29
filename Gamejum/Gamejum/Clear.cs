@@ -13,7 +13,6 @@ namespace Gamejum
     {
         public bool isClear = false;
         public Texture2D texture;
-        public Vector2 position = Vector2.Zero;
         public void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
@@ -24,7 +23,7 @@ namespace Gamejum
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.Draw(texture, Vector2.Zero, Color.White);
         }
     }
 }

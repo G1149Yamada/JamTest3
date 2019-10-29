@@ -17,6 +17,7 @@ namespace Gamejum
         public Texture2D texture;
         public Texture2D secoundTex;
         public Texture2D TripleJump;
+        public Texture2D goal;
         private Texture2D AllTexture;
         private Vector2 worldPosition;
         private Vector2 cameraPosition;
@@ -54,7 +55,7 @@ namespace Gamejum
             {
                 for (x = 0; x < mapData.GetLength(1); x++)
                 {
-                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3||mapData[y,x]==4||mapData[y,x]==5||mapData[y,x]==6||mapData[y,x]==7||mapData[y,x]==8||mapData[y,x]==9||mapData[y,x]==10)
+                    if (mapData[y, x] == 1 || mapData[y, x] == 2 || mapData[y, x] == 3 || mapData[y, x] == 4 || mapData[y, x] == 5 || mapData[y, x] == 6 || mapData[y, x] == 7 || mapData[y, x] == 8 || mapData[y, x] == 9 || mapData[y, x] == 10 || mapData[y, x] == 11 || mapData[y, x] == 12)
                     {
                         worldPosition = new Vector2(x * width, y * height);
                     }
@@ -106,7 +107,7 @@ namespace Gamejum
 
                         spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White);
                     }
-                    else if (mapData[y, x] == 6||mapData[y,x]==7)
+                    else if (mapData[y, x] == 6 || mapData[y, x] == 7 || mapData[y, x] == 12)
                     {
                         num = 0;
 
@@ -124,37 +125,37 @@ namespace Gamejum
                             {
                                 AllTexture = secoundTex;
                             }
-                            if (mapData[y, x] == 7)
+                            if (mapData[y, x] == 7 || mapData[y, x] == 12)
                             {
                                 AllTexture = TripleJump;
                             }
                             Alffa = 1f;
                         }
 
-                        spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White*Alffa);
+                        spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White * Alffa);
                     }
-                    else if (mapData[y, x] == 8||mapData[y,x]==9)
+                    else if (mapData[y, x] == 8 || mapData[y, x] == 9 || mapData[y, x] == 11)
                     {
                         num = 0;
                         ScrollX(x);
                         ScrollY(y);
-                        if (player.D4C==true)
-                        {
-                            num = 2;
-                            AllTexture = texture;
-                            Alffa = 0.7f;
-                        }
-                        else
+                        if (player.D4C == false)
                         {
                             if (mapData[y, x] == 9)
                             {
                                 AllTexture = secoundTex;
                             }
-                            if (mapData[y, x] == 8)
+                            if (mapData[y, x] == 8 || mapData[y, x] == 11)
                             {
                                 AllTexture = TripleJump;
                             }
-
+                            Alffa = 1;
+                        }
+                        else
+                        {
+                            num = 2;
+                            AllTexture = texture;
+                            Alffa = 0.7f;
                         }
                         spriteBatch.Draw(AllTexture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.White * Alffa);
                     }
@@ -162,7 +163,7 @@ namespace Gamejum
                     {
                         ScrollX(x);
                         ScrollY(y);
-                        spriteBatch.Draw(texture, cameraPosition, new Rectangle(128 * num, 0, 128, 128), Color.Blue);
+                        spriteBatch.Draw(goal, cameraPosition, Color.White);
                     }
                 }
             }

@@ -85,6 +85,18 @@
 /processorParam:TextureFormat=Color
 /build:chandelier2.png
 
+#begin clear.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:clear.png
+
 #begin draw1.png
 /importer:TextureImporter
 /processor:TextureProcessor

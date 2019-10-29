@@ -80,6 +80,25 @@ namespace Gamejum
             speed = 1.5f;
             jumpVelocity = 1;
         }
+        public void Initialize()
+        {
+            position = new Vector2(200, 2150);
+            velocity = new Vector2(5, 5);
+
+            isJump = false;
+            jumpCount = 1;
+            tuch = false;
+            four = false;
+
+            tuchCount = 0;
+            anicount = 0;
+
+            previousKey = Keyboard.GetState();//キーボード
+
+            speed = 1.5f;
+            jumpVelocity = 1;
+
+        }
 
         private void GetMap()
         {
@@ -101,7 +120,7 @@ namespace Gamejum
             {
                 for (X = 0; X < mapData.GetLength(1); X++)
                 {
-                    if (mapData[Y, X] == 0 || mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5 || mapData[Y, X] == 6 || mapData[Y, X] == 7 || mapData[Y, X] == 8 || mapData[Y, X] == 9 || mapData[Y, X] == 10)
+                    if (mapData[Y, X] == 0 || mapData[Y, X] == 1 || mapData[Y, X] == 2 || mapData[Y, X] == 3 || mapData[Y, X] == 4 || mapData[Y, X] == 5 || mapData[Y, X] == 6 || mapData[Y, X] == 7 || mapData[Y, X] == 8 || mapData[Y, X] == 9 || mapData[Y, X] == 10||mapData[Y,X]==11||mapData[Y,X]==12)
 
                         blockPosition = new Vector2(X * width, Y * height);
                     blockList.Add(blockPosition);
@@ -114,26 +133,6 @@ namespace Gamejum
 
             rightWall = mapData.GetLength(1) * width;
             bottomWall = mapData.GetLength(0) * height;
-        }
-
-        public void Initialize()
-        {
-            position = new Vector2(200, 2150);
-            velocity = new Vector2(5, 5);
-
-            isJump = false;
-            jumpCount = 1;
-            tuch = false;
-            four = false;
-
-            tuchCount = 0;
-            anicount = 0;
-
-            previousKey = Keyboard.GetState();//キーボード
-
-            speed = 1.5f;
-            jumpVelocity = 1;
-
         }
 
         /// <summary>
@@ -227,6 +226,30 @@ namespace Gamejum
                 case 10:
                     HIT(SizeX, SizeY, Vector);
                     isGamePlay = true;
+                    break;
+                case 11:
+                    HIT(SizeX, SizeY, Vector);
+                    tuchCount = 0;
+                    jumpCount = 0;
+                    if (D4C == false)
+                    {
+                        tuch = true;
+                        jumpVelocity = -2;
+                        speed = -2;
+                        five = true;
+                    }
+                    break;
+                case 12:
+                    HIT(SizeX, SizeY, Vector);
+                    tuchCount = 0;
+                    jumpCount = 0;
+                    if (D4C == true)
+                    {
+                        tuch = true;
+                        jumpVelocity = -2;
+                        speed = 2;
+                        five = true;
+                    }
                     break;
             }
         }
@@ -360,8 +383,8 @@ namespace Gamejum
             {
                 cameraPosition.Y = position.Y - (bottomWall - Screen.Height) + height / 2 + 25;
             }
-            if (four == false && five == false)
-            {
+            //if (four == false && five == false)
+            //{
                 anicount++;
                 if (anicount > 2)
                 {
@@ -372,11 +395,11 @@ namespace Gamejum
                         DrawCount %= 13;
                     }
                 }
-            }
-            if (four == true || five == true)
-            {
-                alpha = 0;
-            }
+            //}
+            //if (four == true || five == true)
+            //{
+            //    alpha = 0;
+            //}
         }
 
         public Vector2 GetPosition()
@@ -438,10 +461,10 @@ namespace Gamejum
             {
                 spriteBatch.Draw(secoundname, cameraPosition, new Rectangle(128 * DrawCount, 0, 128, 128), Color.White * alpha);
             }
-            if (four == true)
-            {
-                spriteBatch.Draw(leftCatch, cameraPosition, Color.White);
-            }
+            //if (four == true)
+            //{
+            //    spriteBatch.Draw(leftCatch, cameraPosition, Color.White);
+            //}
         }
     }
 }
